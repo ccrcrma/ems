@@ -1,4 +1,5 @@
-﻿<h2>Dashboard</h2>
+﻿@model IndexViewModel
+<h2>Dashboard</h2>
 <div class="alert alert-secondary">Dashboard</div>
 <div class="content">
     <div class="btn-controls">
@@ -11,7 +12,7 @@
              <a href="#" class="btn-box big span3" style="background-color: #ffa500d6;">
                 <i class="icon-building" style="color: white;"></i>
                 <p style="color:white; font-size:1rem;">Departments</p>
-                <b style="color:white; background-color:orange" >4</b>
+                <b style="color:white; background-color:orange" >@Model.DepartmentCount</b>
             </a>
             <a href="#" class="btn-box big span3" style="background-color: #008000d4;">
                 <i class="icon-envelope" style="color: white;"></i>
@@ -36,6 +37,11 @@
         <p>Address:USA</p>
         <p>Mobile Number:99999us999</p>
         <p>Designation:Software Engineer</p>
+        <p>StartDate: 2021/01/10</p>
+        <p>Department:IT Department</p>
+        <p> 
+            <span class="badge badge-success" 
+                style="display: inline-block; padding:.5rem;">Role:Admin</span></p>
 
     </div>
 </div>

@@ -6,21 +6,31 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ems.Models;
+using ems.Data;
+using Microsoft.EntityFrameworkCore;
+using ems.ViewModels;
 
 namespace ems.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationContext _context;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationContext context)
         {
+            _context = context;
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            var departmentCount = await _context.Departments.CountAsync();
+            var indexViewModel = new IndexViewModel
+            {
+                DepartmentCount = departmentCount
+            };
+            return View(indexViewModel);
         }
 
         public IActionResult Privacy()
