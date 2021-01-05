@@ -1,0 +1,12 @@
+@{
+    var type = TempData["alert-type"];
+    var body = TempData["alert-body"];
+    var title = TempData["alert-title"];
+}
+@if(type !=null)
+{
+    <div class="alert alert-@type show">
+        <strong> @title  </strong> @body
+        <a data-dismiss="alert" class="close">&times;</a>
+    </div>
+}

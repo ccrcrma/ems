@@ -96,6 +96,10 @@ color:#000;
   margin-bottom: 3px;
 }
 
+.mb-3  * {
+  width:100%;
+}
+
 .form-label {
   font-size:1rem;
   color: #000000;
@@ -103,6 +107,15 @@ color:#000;
 
 .btn-outline-primary{
   outline-color: skyblue;
+  outline-style: solid;
+  outline-width: 1.9px;
+}
+
+.btn-outline-success{
+    outline: 1.9px solid green;
+}
+.btn-outline-danger{
+  outline-color: red;
   outline-style: solid;
   outline-width: 1.9px;
 }

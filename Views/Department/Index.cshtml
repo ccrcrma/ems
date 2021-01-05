@@ -4,33 +4,57 @@
 }
 
 <div class="alert">All Departments</div>
+<partial name="_DeleteDepartmentModal"></partial>
 
 @if(Model.Count > 0)
 {
+    <div class="module">
+        <div class="module-head">
+            <h3>Departments</h3>
+        </div>
+        <div class="module-body table">
+            <table 
+                cellpadding="0" 
+                cellspacing="0" 
+                border="0" 
+                width="100%"
+                class="table table-bordered table-striped display datatable-1">
+                <thead>
+                    <tr>
+                        <th>S.N.</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int i =1;}
+                    @foreach(var department in Model ){
+                        <tr>
+                            <td>@(i++)</td>
+                            <td>@department.Name</td>
+                            <td>@department.Description</td>
+                            <td><a asp-action="Edit" asp-controller="Department" asp-route-id="@department.Id" class="btn btn-outline-primary">Edit</a></td>
+                            <td>
+                               <a href="#delete-department-model" 
+                                    data-department-id="@department.Id"
+                                    role="button" 
+                                    class="btn btn-outline-danger" 
+                                    data-toggle="modal">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>S.N.</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var department in Model ){
-                <tr>
-                    <td>@department.Id</td>
-                    <td>@department.Name</td>
-                    <td>@department.Description</td>
-                    <td><button class="btn btn-outline-primary">Edit</button></td>
-                    <td><button class="btn btn-outline-primary">Delete</button></td>
-                </tr>
-            }
-        </tbody>
-    </table>
     }
 else {
     <h2>List coming soon</h2>
+}
+
+@section Scripts {
+    <partial name="_PagingJavascriptImports"></partial>
 }

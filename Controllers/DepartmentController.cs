@@ -5,6 +5,7 @@ using ems.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using ems.Helpers.Alert;
 
 namespace ems.Controllers
 {
@@ -30,9 +31,56 @@ namespace ems.Controllers
                 Name = d.Name,
                 Description = d.Description,
                 Id = d.Id
-                
+
             }).ToListAsync();
             return View(departments);
+        }
+        [HttpGet]
+        public async Task<IActionResult> EditAsync(int id)
+        {
+            var departmentVm = (await _context.Departments
+                .FirstOrDefaultAsync(d => d.Id == id))
+                .ToViewModel();
+
+            if (departmentVm == null)
+            {
+                return NotFound();
+            }
+            return View(departmentVm);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var department = await _context.Departments.FirstOrDefaultAsync(d => d.Id == id);
+            if (department == null)
+            {
+                return BadRequest();
+            }
+            _context.Entry(department).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index")
+            .WithSuccess("congrats", "the department was deleted successfully");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, DepartmentViewModel departmentVm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(departmentVm);
+            }
+
+            var department = await _context.Departments.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id);
+            if (department == null)
+            {
+                return BadRequest();
+            }
+            department = departmentVm.ToModel();
+            _context.Entry(department).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -46,7 +94,8 @@ namespace ems.Controllers
             var department = departmentVm.ToModel();
             _context.Departments.Add(department);
             await _context.SaveChangesAsync();
-            return LocalRedirect("~/");
+            return LocalRedirect("~/").WithSuccess("hurray", $"new Department {department.Name} created");
+            // return AlertExtensions.WithSuccess(LocalRedirect("~/"), "hurray", "$new Department {department.Name} created");
         }
     }
 }

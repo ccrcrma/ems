@@ -59,7 +59,7 @@
                             <p class="widget-header">Core</p>
                             <ul class="widget widget-menu unstyled">
                                 <li class="active">
-                                    <a href="index.html"><i class="menu-icon icon-dashboard"></i>Dashboard</a>
+                                    <a asp-action="Index" asp-controller="Home"><i class="menu-icon icon-dashboard"></i>Dashboard</a>
                                 </li>
                             </ul>
                         </div>
@@ -99,16 +99,16 @@
                                             <i class="icon-chevron-down pull-right"></i>
                                             Users </a>
                                         <ul id="toggleUsers" class="collapse unstyled">
-                                            <li><a href="other-login.html"><i class="icon-inbox"></i>Create </a></li>
-                                            <li><a href="other-user-profile.html"><i class="icon-inbox"></i>View </a>
+                                            <li><a href="other-login.html">Create </a></li>
+                                            <li><a href="other-user-profile.html">View </a>
                                             </li>
                                         </ul>
                                         <a class="collapsed" data-toggle="collapse" href="#togglePermissions">
                                             <i class="icon-chevron-down pull-right"></i>
                                             Persmission </a>
                                         <ul id="togglePermissions" class="collapse unstyled">
-                                            <li><a href="other-login.html"><i class="icon-inbox"></i>Create </a></li>
-                                            <li><a href="other-user-profile.html"><i class="icon-inbox"></i>View </a>
+                                            <li><a href="other-login.html">Create </a></li>
+                                            <li><a href="other-user-profile.html">View </a>
                                             </li>
                                         </ul>
                                     </div>
@@ -120,8 +120,8 @@
                                         <i class="icon-chevron-up pull-right"></i>
                                         Staff Leave </a>
                                     <ul id="toggleLeaves" class="collapse unstyled">
-                                        <li><a href="other-login.html">Approve Leave </a></li>
-                                        <li><a href="other-user-profile.html">Create Leave</a></li>
+                                        <li><a asp-action="Index" asp-controller="Leave">Approve Leave </a></li>
+                                        <li><a asp-action="Create" asp-controller="Leave">Create Leave</a></li>
                                     </ul>
                                 </li>
                                 <li>
@@ -143,6 +143,7 @@
                 </div>
                 <!--/.span3-->
                 <div class="span9">
+                    <partial name="_AlertPartial"></partial>
                     @RenderBody()
                 </div>
                 <!--/.span9-->
@@ -155,8 +156,8 @@
     <script src="~/js/scripts/jquery-1.9.1.min.js" type="text/javascript"></script>
     <script src="~/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="~/js/toggle-sidenav.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     @RenderSection("Scripts", false)
+    @Html.PageScripts()
 
 </body>
 <footer class="footer">
