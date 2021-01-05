@@ -1,0 +1,40 @@
+@model LeaveViewModel
+@{
+    ViewBag.Title = "Edit Leave";
+}
+
+<form asp-action="Edit" asp-route-id="@Model.Id" style="margin-bottom: 2rem;">
+    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+    <div class="mb-3">
+        <label asp-for="From" class="form-control"></label>
+        <input asp-for="From" class="form-control">
+        <span class="text-danger" asp-validation-for="From"></span>
+
+    </div>
+    <div class="mb-3">
+        <label asp-for="To" class="form-control"></label>
+        <input asp-for="To" class="form-control">
+        <span class="text-danger" asp-validation-for="To"></span>
+        
+    </div>
+
+    <div class="mb-3 form-select">
+        <label asp-for="Leave" class="form-select"></label>
+        <select  asp-for="Leave" asp-for="Leave"  asp-items="Html.GetEnumSelectList<Leave.LeaveType>()">
+            <option value="">Slect a Leave Type</option>
+        </select>
+        <span class="text-danger" asp-validation-for="Leave"></span>
+    </div>
+
+     <div class="mb-3">
+        <label asp-for="Description" class="form-select"></label>
+        <textarea  asp-for="Description" asp-for="Description"></textarea>
+        <span class="text-danger" asp-validation-for="Description"></span>
+    </div>
+    <button type="submit" class="btn btn-outline-success">Edit</button>
+</form>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial"></partial>
+}

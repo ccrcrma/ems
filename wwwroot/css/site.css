@@ -119,3 +119,7 @@ color:#000;
   outline-style: solid;
   outline-width: 1.9px;
 }
+
+.modal-title {
+  font-weight: bold;
+}

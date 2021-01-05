@@ -1,27 +1,48 @@
 <div class="modal hide fade" id="leave-request-decision" style="width:300px">
     <div class="modal-header">
         <button data-dismiss="modal" class="close">&times;</button>
-        <h2>
-            Confirm Leave (from js obviously)
+        <h2 class="modal-title" id="modal-title">
+            Obviously from javascript
         </h2>
     </div>
     <form action="somewhere">
         <div class="modal-body">
             <div class="mb-3 ">
-                <label for="status" class="form-label" >Status</label>
-                <select name="" id="status" class="form-select">
-                    <option value="">Accept</option>
-                    <option value="">Reject</option>
+                <label for="select-status" class="form-label">Status</label>
+                <select name="" id="select-status" class="form-select">
                 </select>
             </div>
             <div class="mb-3">
-                <label for="description" class="form-label" >Description</label>
+                <label for="description" class="form-label">Description</label>
                 <textarea name="" id="description" cols="30" rows="3" class="form-control"></textarea>
             </div>
         </div>
         <div class="modal-footer">
-                <button class="btn btn-success" type="submit">Approve</button>
-                <button class="btn btn-danger" type="submit">Reject</button>
-            </form>
-    </div>
+            <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-success" type="submit">Submit</button>
+    </form>
 </div>
+</div>
+
+@using (Html.BeginScripts())
+{
+    <script>
+    $(".modal").on("show", function (event) {
+        var title = $(this).data("title")
+        var options = $(this).data("options")
+        var select = document.getElementById("select-status")
+        select.innerHTML= " ";
+        for (var i = 0, l = options.length; i < l; i++) {
+            var obj = options[i];
+            var text = Object.keys(options[i])
+            var value = Object.values(options[i]) 
+            var option = document.createElement("option");
+            option.setAttribute("value", value);
+            option.innerHTML = text;
+            select.appendChild(option);  
+        }
+        document.getElementById("modal-title").innerHTML = title;
+
+    })
+</script>
+}

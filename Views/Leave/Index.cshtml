@@ -33,13 +33,17 @@
                 {
                     <tr>
                         <td>dummy user</td>
-                        <td>@leave.From</td>
-                        <td>@leave.To</td>
+                        <td>@leave.From.ToShortDateString()</td>
+                        <td>@leave.To.ToShortDateString()</td>
                         <td>@leave.Description</td>
                         <td>@(EnumHelper<Leave.LeaveType>.GetDisplayValue(leave.Leave))</td>
                         <td>Accepted</td>
                         <td><button class="btn btn-success">Accepted</button></td>
-                        <td><a href="#leave-request-decision" data-toggle="modal">Approve/Reject</a></td>
+                        <td>
+                            <a href="#leave-request-decision" data-toggle="modal" data-title="Confirm">Approve</a>
+                                <span style="color: blue;">/</span>
+                            <a href="#leave-request-decision" data-toggle="modal" data-title="Reject">Reject</a>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -49,4 +53,24 @@
 
 @section Scripts {
     <partial name="_PagingJavascriptImports"></partial>
+    <script>
+
+       $('[data-toggle="modal"]').on('click', function() {
+            var modal = $($(this).attr('href'));
+            var title = $(this).data("title");
+            modal.data('title', title);
+            switch(title){
+                case "Confirm":
+                    console.log("confirm clicked");
+                    modal.data("options", [{Approved:0}, {Pending:1}])
+                    break;
+                case "Reject":
+                    console.log("reject clicked");
+                    modal.data("options",[{Rejected:2}])
+                    break;
+                default:
+                    console.log("you will never see me");
+            }
+        });
+    </script>
 }

@@ -21,9 +21,12 @@ namespace ems.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
-            return View();
+            LeaveCreateIndexViewModel vm = new LeaveCreateIndexViewModel();
+            var allLeaves = await _context.Leaves.Select(l => l.ToViewModel()).ToListAsync();
+            vm.MyLeaves = allLeaves;
+            return View(vm);
         }
 
         [HttpPost]
@@ -41,8 +44,49 @@ namespace ems.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-            var leaves =  await _context.Leaves.Select(leave => leave.ToViewModel()).AsNoTracking().ToListAsync();
+            var leaves = await _context.Leaves.Select(leave => leave.ToViewModel()).AsNoTracking().ToListAsync();
             return View(leaves);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditAsync(int id)
+        {
+            var leave = (await _context.Leaves.FirstOrDefaultAsync(l => l.Id == id)).ToViewModel();
+            if (leave == null)
+                return NotFound();
+            return View(leave);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAsync(int id, LeaveViewModel leaveVm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(leaveVm);
+            }
+            var leave = await _context.Leaves.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id);
+            if (leave == null)
+            {
+                return BadRequest();
+            }
+
+            leave = leaveVm.ToModel();
+            _context.Entry(leave).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Home").WithSuccess("hurray", $"leave with id {leave.Id} was updated");
+
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var leave = await _context.Leaves.FirstOrDefaultAsync(l => l.Id == id);
+            if (leave == null)
+                return BadRequest();
+            _context.Entry(leave).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Create").WithSuccess("", $"leave with id {id} deleted successfully");
         }
     }
 }
