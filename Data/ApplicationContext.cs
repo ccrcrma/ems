@@ -13,9 +13,8 @@ namespace ems.Data
         }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Leave> Leaves { get; set; }
-
-
-
+        public DbSet<Reply> Replies { get; set; }
+        public DbSet<Notice> Notices { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,6 +39,23 @@ namespace ems.Data
                 leave.Property(l => l.Type).HasColumnType("tinyint");
                 leave.Property(l => l.To).HasColumnType("date");
                 leave.Property(l => l.Description).IsRequired();
+            });
+
+            modelBuilder.Entity<Reply>(reply =>
+            {
+                reply.ToTable("reply").HasKey(r => r.Id);
+                reply.Property(r => r.Status).HasColumnType("tinyint");
+                reply.Property(r => r.Description).IsRequired();
+                reply.HasOne<Leave>().WithOne(l => l.Reply).HasForeignKey("Reply", "LeaveId").IsRequired();
+
+            });
+
+            modelBuilder.Entity<Notice>(notice =>
+            {
+                notice.ToTable("notice").HasKey(n => n.Id);
+                notice.Property(n => n.Title).IsRequired().HasMaxLength(100);
+                notice.Property(n => n.Description).IsRequired();
+                notice.Property(n => n.CreatedDate).HasColumnType("date");
             });
         }
     }

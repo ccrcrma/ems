@@ -24,6 +24,7 @@ namespace ems.Models
         public LeaveType Type { get; set; }
         public string Description { get; set; }
 
+
         internal LeaveViewModel ToViewModel()
         {
             return new LeaveViewModel
@@ -32,8 +33,12 @@ namespace ems.Models
                 From = From,
                 To = To,
                 Description = Description,
-                Leave = Type
+                Leave = Type,
+                Reply = Reply
             };
         }
+
+        public Reply Reply { get; set; }
+
     }
 }

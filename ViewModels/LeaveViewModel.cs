@@ -22,6 +22,8 @@ namespace ems.ViewModels
 
         public LeaveType Leave { get; set; }
 
+        public Reply Reply;
+
         public Leave ToModel()
         {
             return new Leave

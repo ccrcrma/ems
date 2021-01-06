@@ -5,16 +5,16 @@
             Obviously from javascript
         </h2>
     </div>
-    <form action="somewhere">
+    <form method="POST" data-action="@Url.Action("Decision", "Leave")" id="reply-form">
         <div class="modal-body">
             <div class="mb-3 ">
                 <label for="select-status" class="form-label">Status</label>
-                <select name="" id="select-status" class="form-select">
+                <select name="status" id="select-status" class="form-select">
                 </select>
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
-                <textarea name="" id="description" cols="30" rows="3" class="form-control"></textarea>
+                <textarea name="description" id="description" cols="30" rows="3" class="form-control"></textarea>
             </div>
         </div>
         <div class="modal-footer">
@@ -30,6 +30,8 @@
     $(".modal").on("show", function (event) {
         var title = $(this).data("title")
         var options = $(this).data("options")
+        var leave = $(this).data("leave");
+        console.log(leave);
         var select = document.getElementById("select-status")
         select.innerHTML= " ";
         for (var i = 0, l = options.length; i < l; i++) {
@@ -42,6 +44,11 @@
             select.appendChild(option);  
         }
         document.getElementById("modal-title").innerHTML = title;
+        
+        var form = document.getElementById("reply-form");
+        var action = form.dataset.action;
+        action = `${action}/${leave}`;
+        form.setAttribute("action", action);
 
     })
 </script>

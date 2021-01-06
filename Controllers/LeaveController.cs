@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using ems.Data;
 using ems.Helpers;
 using ems.Helpers.Alert;
+using ems.Models;
 using ems.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using static ems.Models.Leave;
 
 namespace ems.Controllers
@@ -14,17 +16,19 @@ namespace ems.Controllers
     public class LeaveController : Controller
     {
         private ApplicationContext _context;
+        private readonly ILogger<LeaveController> _logger;
 
-        public LeaveController(ApplicationContext context)
+        public LeaveController(ApplicationContext context, ILogger<LeaveController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> CreateAsync()
         {
             LeaveCreateIndexViewModel vm = new LeaveCreateIndexViewModel();
-            var allLeaves = await _context.Leaves.Select(l => l.ToViewModel()).ToListAsync();
+            var allLeaves = await _context.Leaves.Include(l => l.Reply).Select(l => l.ToViewModel()).ToListAsync();
             vm.MyLeaves = allLeaves;
             return View(vm);
         }
@@ -44,7 +48,7 @@ namespace ems.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-            var leaves = await _context.Leaves.Select(leave => leave.ToViewModel()).AsNoTracking().ToListAsync();
+            var leaves = await _context.Leaves.Include(l => l.Reply).Select(leave => leave.ToViewModel()).AsNoTracking().ToListAsync();
             return View(leaves);
         }
 
@@ -87,6 +91,37 @@ namespace ems.Controllers
             _context.Entry(leave).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
             return RedirectToAction("Create").WithSuccess("", $"leave with id {id} deleted successfully");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DecisionAsync(int id, string description, Models.Reply.ReplyStatus status)
+        {
+            var leave = await _context.Leaves.Include(l => l.Reply).FirstOrDefaultAsync(l => l.Id == id);
+            if (leave == null)
+            {
+                return BadRequest();
+            }
+            var reply = leave.Reply;
+            if (reply == null)
+            {
+                reply = new Reply();
+                reply.LeaveId = leave.Id;
+                reply.Status = status;
+                reply.Description = description;
+                _context.Entry(reply).State = EntityState.Added;
+            }
+            else
+            {
+                reply.Status = status;
+                reply.Description = description;
+                _context.Entry(reply).State = EntityState.Modified;
+
+            }
+
+            _logger.LogInformation(_context.Entry(reply).State.ToString());
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index").WithSuccess("", $"leave with id {id} {status.ToString()}");
         }
     }
 }

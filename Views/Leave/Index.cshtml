@@ -23,8 +23,8 @@
                     <th>Date To</th>
                     <th>Description</th>
                     <th>Type</th>
-                    <th>Reply</th>
                     <th>Status</th>
+                    <th>Reply</th>
                     <th>Approve/Reject</th>
                 </tr>
             </thead>
@@ -37,12 +37,32 @@
                         <td>@leave.To.ToShortDateString()</td>
                         <td>@leave.Description</td>
                         <td>@(EnumHelper<Leave.LeaveType>.GetDisplayValue(leave.Leave))</td>
-                        <td>Accepted</td>
-                        <td><button class="btn btn-success">Accepted</button></td>
                         <td>
-                            <a href="#leave-request-decision" data-toggle="modal" data-title="Confirm">Approve</a>
+                            @{
+                                var leaveStatus = leave.Reply?.Status;
+                                string actionColor= "info";
+                                switch(leaveStatus){
+                                    case Reply.ReplyStatus.Approved:
+                                        actionColor = "success";
+                                        break;
+                                    case Reply.ReplyStatus.Rejected:
+                                        actionColor = "danger";
+                                        break;
+                                }
+                            }
+                            <span class="btn btn-@actionColor">@leave.Reply?.Status.ToString() </span>
+                        </td>
+                        <td>@leave.Reply?.Description</td>
+                        <td>
+                            <a href="#leave-request-decision" 
+                                data-toggle="modal" 
+                                data-title="Confirm"
+                                data-leave="@leave.Id">Approve</a>
                                 <span style="color: blue;">/</span>
-                            <a href="#leave-request-decision" data-toggle="modal" data-title="Reject">Reject</a>
+                            <a href="#leave-request-decision" 
+                                data-toggle="modal" 
+                                data-title="Reject"
+                                data-leave="@leave.Id">Reject</a>
                         </td>
                     </tr>
                 }
@@ -59,18 +79,17 @@
             var modal = $($(this).attr('href'));
             var title = $(this).data("title");
             modal.data('title', title);
+            modal.data("leave", this.dataset.leave)
             switch(title){
                 case "Confirm":
-                    console.log("confirm clicked");
-                    modal.data("options", [{Approved:0}, {Pending:1}])
+                    modal.data("options", [{Pending:1},{Approved:2}])
                     break;
                 case "Reject":
-                    console.log("reject clicked");
-                    modal.data("options",[{Rejected:2}])
+                    modal.data("options",[{Rejected:3}])
                     break;
                 default:
                     console.log("you will never see me");
             }
         });
     </script>
-}
+}   
