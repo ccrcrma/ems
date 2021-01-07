@@ -123,3 +123,38 @@ color:#000;
 .modal-title {
   font-weight: bold;
 }
+
+.notice {
+  background-color: #00ffff59;
+  padding: .8rem;
+  margin-bottom: 1rem;
+}
+
+.notice-title{
+  background-color: cornsilk;
+  padding:.3rem 1.2rem;
+  font-size: 1rem;
+}
+.notice-description {
+  color: black;
+  font-size: 1rem;
+}
+.page-header {
+  background-color: #dcdcdc;
+  font-weight: normal;
+  padding: .2rem 1.3rem;
+}
+
+.notice-actions{
+  display: flex;
+  margin-top: 1rem;
+
+}
+.notice-actions a:nth-child(2) {
+  margin-left:auto;
+}
+
+.badge {
+  padding:5px 9px;
+  font-size: 0.8rem;
+}

@@ -1,0 +1,76 @@
+@model MailViewModel
+@{
+    ViewBag.Title = "Create Mail";
+}
+
+
+<h3 class="page-header">Mail</h3>
+
+<form asp-action="Create" asp-controller="Mail" enctype="multipart/form-data">
+    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+    <div class="mb-3">
+        <label asp-for="Receiver" class="form-control"></label>
+        <select 
+            id="mail-to"
+            asp-for="Receiver" 
+            class="form-control" 
+            asp-items="Html.GetEnumSelectList<MailViewModel.ReceiverType>()">
+            <option>Please choose mail receiver</option>  
+        </select>
+        <span class="text-danger" asp-validation-for="Receiver"></span>
+    </div>
+    <div class="mb-3" id="department-dropdown-container" style="display:none;">
+        <label for="department-dropdown">Select Department</label>
+        <select asp-for="ResourceId" id="department-dropdown"  asp-items="@Model.Departments">
+            <option value="">Please select a department</option>
+        </select>
+    </div>
+    <div class="mb-3" id="user-dropdown-container" style="display:none">
+        <label for="user-dropdown">Select User</label>
+        <select asp-for="ResourceId" id="user-dropdown" asp-items="@Model.Users">
+            <option value="">Please select a User</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Body" class="form-control"></label>
+        <textarea asp-for="Body" class="form-control"> </textarea>
+        <span class="text-danger" asp-validation-for="Body"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Subject" class="form-control"></label>
+        <input asp-for="Subject" class="form-control"/>
+        <span class="text-danger" asp-validation-for="Subject"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Files" class="form-control"></label>
+        <input asp-for="Files" class="form-control"/>
+        <span class="text-danger" asp-validation-for="Files"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"></partial>
+    <script>
+        var mailDropdown =   document.getElementById("mail-to")
+        mailDropdown.onchange = function(event){
+            document.getElementById("department-dropdown-container").style.display = "none";
+            document.getElementById("user-dropdown-container").style.display = "none";
+            var selectedValue =  parseInt(this.value)
+            switch(selectedValue){
+                case 1:
+                    console.log("all employee selected");
+                    break;
+                case 2:
+                    document.getElementById("user-dropdown-container").style.display = "block";
+                    break;
+                case 3:
+                    document.getElementById("department-dropdown-container").style.display = "block";
+                    console.log("department select visible")
+                    break;
+                default:
+                    console.log("shouldn't see me ");
+            }
+        }
+    </script>
+}
