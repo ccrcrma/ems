@@ -1,11 +1,16 @@
 using System;
+using ems.Areas.Identity.Models;
 using ems.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ems.Data
 {
-    public class ApplicationContext : DbContext
+    public class ApplicationContext : IdentityDbContext<ApplicationUser, IdentityRole, string,
+        IdentityUserClaim<string>, UserRole, IdentityUserLogin<string>,
+        IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
@@ -56,6 +61,34 @@ namespace ems.Data
                 notice.Property(n => n.Title).IsRequired().HasMaxLength(100);
                 notice.Property(n => n.Description).IsRequired();
                 notice.Property(n => n.CreatedDate).HasColumnType("date");
+            });
+
+            modelBuilder.Entity<ApplicationUser>(user =>
+            {
+                user.Property(u => u.FirstName).IsRequired().HasMaxLength(100);
+                user.Property(u => u.LastName).IsRequired().HasMaxLength(100);
+                user.Property(u => u.Address).IsRequired().HasMaxLength(200);
+                user.Property(u => u.PhoneNumber).IsRequired().HasMaxLength(10);
+                user.Property(u => u.Post).HasColumnType("tinyint");
+                user.Property(u => u.CreatedDate).HasColumnType("date");
+
+                user.HasOne<Department>(u => u.Department)
+                    .WithMany()
+                    .HasForeignKey(u => u.DepartmentId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<UserRole>(userRole =>
+            {
+                userRole.HasOne<ApplicationUser>(ur => ur.User)
+                    .WithMany(u => u.UserRoles)
+                    .HasForeignKey(ur => ur.UserId)
+                    .IsRequired();
+                userRole.HasOne<IdentityRole>(r => r.Role)
+                    .WithMany()
+                    .HasForeignKey(r => r.RoleId)
+                    .IsRequired();
             });
         }
     }

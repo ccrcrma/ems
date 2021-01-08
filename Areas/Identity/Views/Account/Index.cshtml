@@ -1,0 +1,45 @@
+@model List<UserViewModel>
+@{
+    ViewBag.Title = "all users";
+    int count = 1;
+}
+
+<h3 class="page-header">All employee</h3>
+
+<table class="table table-bordered table-striped display datatable-1">
+    <thead>
+        <tr>
+            <th>S.N.</th>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Department</th>
+            <th>Post</th>
+            <th>StartDate</th>
+            <th>Mobile</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@(count++)</td>
+                <td>@user.Photo</td>
+                <td>@user.Name</td>
+                <td>@(string.Join(" ", user.Roles))</td>
+                <td>@user.Department</td>
+                <td>@user.Post</td>
+                <td>@user.StartDate</td>
+                <td>@user.PhoneNumber</td>
+                <td><button class="btn btn-primary">Edit</button></td>
+                <td><button class="btn btn-danger">Delete</button></td>
+                </tr>
+        }
+  </tbody>
+</table>
+
+@section Scripts{
+    <partial name="_PagingJavascriptImports"></partial>
+}

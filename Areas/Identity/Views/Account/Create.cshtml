@@ -1,0 +1,116 @@
+@model UserRegistrationViewModel
+@using ems.Areas.Identity.Types
+@{
+    ViewBag.Title = "Create users";
+}
+
+<h3 class="page-header">Register Employee</h3>
+
+<form asp-action="Create" asp-controller="Account" asp-area="Identity" class="flex-container" >
+    <div class="general-info" style="flex-basis:35rem; margin-right:5rem;" >
+        <h3 class="col-header">General Information</h3>
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <div class="mb-3">
+                <label asp-for="GeneralInfo.FirstName" class="form-label"></label>
+                <input asp-for="GeneralInfo.FirstName" class="form-control">
+                <span class="text-danger" asp-validation-for="GeneralInfo.FirstName"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="GeneralInfo.LastName" class="form-label"></label>
+                <input asp-for="GeneralInfo.LastName" class="form-control">
+                <span class="text-danger" asp-validation-for="GeneralInfo.LastName"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="GeneralInfo.Address" class="form-label"></label>
+                <input asp-for="GeneralInfo.Address" class="form-control">
+                <span class="text-danger" asp-validation-for="GeneralInfo.Address"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="GeneralInfo.MobileNumber" class="form-label"></label>
+                <input asp-for="GeneralInfo.MobileNumber" class="form-control" id="mobile-phone">
+                <span class="text-danger" asp-validation-for="GeneralInfo.MobileNumber"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="GeneralInfo.FormFile" class="form-label"></label>
+                <input asp-for="GeneralInfo.FormFile" class="form-control">
+                <span class="text-danger" asp-validation-for="GeneralInfo.FormFile"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="GeneralInfo.Department" class="form-label"></label>
+                <select class="form-control" asp-for="GeneralInfo.Department" asp-items="@Model.GeneralInfo.Departments">
+                    <option value="">Please Select a Department</option>
+                </select>
+                <span class="text-danger" asp-validation-for="GeneralInfo.Department"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="GeneralInfo.Post" class="form-label"></label>
+                <select asp-for="GeneralInfo.Post" class="form-control" 
+                    asp-items="@Html.GetEnumSelectList<Designation>()">
+                        <option value="">Please select a Post</option>
+                    </select>
+                <span class="text-danger" asp-validation-for="GeneralInfo.Post"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="GeneralInfo.StartDate" class="form-label"></label>
+                <input asp-for="GeneralInfo.StartDate" class="form-control">
+                <span class="text-danger" asp-validation-for="GeneralInfo.StartDate"></span>
+            </div>
+            
+    </div>
+
+    <div class="login-info" style="flex-basis:20rem;">
+        <h3 class="col-header">Login Information</h3>
+        <div class="mb-3">
+            <label asp-for="LoginInfo.Email" class="form-label"></label>
+            <input asp-for="LoginInfo.Email" class="form-control">
+            <span class="text-danger" asp-validation-for="LoginInfo.Email"></span>
+        </div>
+        <div>
+            <label asp-for="LoginInfo.Password" class="form-label"></label>
+            <input asp-for="LoginInfo.Password" class="form-control">
+            <span class="text-danger" asp-validation-for="LoginInfo.Password"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="LoginInfo.ConfirmPassword" class="form-label"></label>
+            <input asp-for="LoginInfo.ConfirmPassword" class="form-control">
+            <span class="text-danger" asp-validation-for="LoginInfo.ConfirmPassword"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="GeneralInfo.Role" class="form-label"></label>
+            <select asp-for="GeneralInfo.Role" class="form-control" asp-items="@Model.GeneralInfo.Roles">
+                <option value="">Please Select a Role</option>
+            </select>
+            <span class="text-danger" asp-validation-for="GeneralInfo.Role"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"></partial>
+    <script>
+        function setInputFilter(textbox, inputFilter) {
+        ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+            textbox.addEventListener(event, function() {
+            if (inputFilter(this.value)) {
+                this.oldValue = this.value;
+                console.log(this.oldSelectionStart, this.oldSelectionEnd)
+                this.oldSelectionStart = this.selectionStart;
+                this.oldSelectionEnd = this.selectionEnd;
+            } else if (this.hasOwnProperty("oldValue")) {
+                this.value = this.oldValue;
+                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            } else {
+                this.value = "";
+            }
+            });
+        });
+        }
+
+    setInputFilter(document.getElementById("mobile-phone"), function(value) {
+        return /^\d*$/.test(value);
+});
+    </script>
+}

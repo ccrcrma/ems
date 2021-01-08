@@ -5,6 +5,9 @@ namespace ems.ViewModels
         public int DepartmentCount { get; set; }
         public int LeaveCount { get; set; }
         public int NoticeCount { get; set; }
+        public int UserCount { get; set; }
+        
+        
         
         
         

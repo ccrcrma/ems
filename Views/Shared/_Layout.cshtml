@@ -59,7 +59,7 @@
                             <p class="widget-header">Core</p>
                             <ul class="widget widget-menu unstyled">
                                 <li class="active">
-                                    <a asp-action="Index" asp-controller="Home"><i class="menu-icon icon-dashboard"></i>Dashboard</a>
+                                    <a asp-action="Index" asp-controller="Home" asp-area=""><i class="menu-icon icon-dashboard"></i>Dashboard</a>
                                 </li>
                             </ul>
                         </div>
@@ -99,8 +99,8 @@
                                             <i class="icon-chevron-down pull-right"></i>
                                             Users </a>
                                         <ul id="toggleUsers" class="collapse unstyled">
-                                            <li><a href="other-login.html">Create </a></li>
-                                            <li><a href="other-user-profile.html">View </a>
+                                            <li><a asp-action="Create" asp-controller="Account" asp-area="Identity">Create </a></li>
+                                            <li><a asp-action="Index" asp-controller="Account" asp-area="Identity">View </a>
                                             </li>
                                         </ul>
                                         <a class="collapsed" data-toggle="collapse" href="#togglePermissions">

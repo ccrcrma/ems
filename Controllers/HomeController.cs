@@ -28,11 +28,13 @@ namespace ems.Controllers
             var departmentCount = await _context.Departments.CountAsync();
             var leaveCount = await _context.Leaves.CountAsync();
             var noticeCount = await _context.Notices.CountAsync();
+            var userCount = await _context.Users.CountAsync();
             var indexViewModel = new IndexViewModel
             {
                 DepartmentCount = departmentCount,
                 LeaveCount = leaveCount,
-                NoticeCount = noticeCount
+                NoticeCount = noticeCount,
+                UserCount = userCount
             };
             return View(indexViewModel);
         }
