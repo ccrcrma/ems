@@ -168,3 +168,8 @@ color:#000;
 .flex-container {
   display: flex;
 }
+
+.flex-item {
+  margin-right: 2rem;
+  width:auto;
+}

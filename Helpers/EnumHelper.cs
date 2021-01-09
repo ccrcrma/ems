@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace ems.Helpers
 {
-    public static class EnumHelper<T>where T : struct, Enum
+    public static class EnumHelper<T> where T : struct, Enum
     {
         public static IList<T> GetValues(Enum value)
         {
@@ -55,10 +55,11 @@ namespace ems.Helpers
             var descriptionAttributes = fieldInfo.GetCustomAttributes(
                 typeof(DisplayAttribute), false) as DisplayAttribute[];
 
-            if (descriptionAttributes[0].ResourceType != null)
-                return lookupResource(descriptionAttributes[0].ResourceType, descriptionAttributes[0].Name);
 
+            if (descriptionAttributes.Length > 0 && descriptionAttributes[0].ResourceType != null)
+                return lookupResource(descriptionAttributes[0].ResourceType, descriptionAttributes[0].Name);
             if (descriptionAttributes == null) return string.Empty;
+
             return (descriptionAttributes.Length > 0) ? descriptionAttributes[0].Name : value.ToString();
         }
     }

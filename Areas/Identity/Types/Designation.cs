@@ -7,6 +7,6 @@ namespace ems.Areas.Identity.Types
         [Display(Name = "Software Engineer")]
         SoftwareEngineer = 1,
         Supervisor,
-        Recepitonist
+        Receptionist
     }
 }

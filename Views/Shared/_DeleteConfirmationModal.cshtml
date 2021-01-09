@@ -29,9 +29,8 @@
     $('#delete-modal').on('show', function (event) {
         console.log("modal show method called");
         var form = document.getElementById("delete-form");
-        var action =  `${this.dataset.action}/${this.dataset.resourceId}`; 
+        var action =  this.dataset.action; 
         document.getElementById("resource-name").innerHTML = this.dataset.resourceName;
-
         form.setAttribute("action", action);
     })
 </script>

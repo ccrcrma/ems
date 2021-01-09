@@ -1,9 +1,11 @@
-@model List<UserViewModel>
+@using ems.Areas.Identity.Types
+@model List<UserDTO>
 @{
     ViewBag.Title = "all users";
     int count = 1;
 }
 
+<partial name="_DeleteConfirmationModal"></partial>
 <h3 class="page-header">All employee</h3>
 
 <table class="table table-bordered table-striped display datatable-1">
@@ -30,11 +32,18 @@
                 <td>@user.Name</td>
                 <td>@(string.Join(" ", user.Roles))</td>
                 <td>@user.Department</td>
-                <td>@user.Post</td>
+                <td>@(EnumHelper<Designation>.GetDisplayValue(user.Post))</td>
                 <td>@user.StartDate</td>
                 <td>@user.PhoneNumber</td>
-                <td><button class="btn btn-primary">Edit</button></td>
-                <td><button class="btn btn-danger">Delete</button></td>
+                <td><a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary">Edit</a></td>
+                <td>
+                    <a data-toggle="modal"
+                        href="#delete-modal"
+                        data-resource-id="@user.Id"
+                        data-resource-name="User"
+                        data-action="@(Url.RouteUrl("DeleteUser",  new {id =user.Id}))"
+                        class="btn btn-danger">Delete</a>
+                    </td>
                 </tr>
         }
   </tbody>

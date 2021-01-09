@@ -15,8 +15,7 @@
         <div class="notice-actions">
             <a asp-action="Edit" asp-route-id="@notice.Id" class="btn btn-primary">Edit</a>
             <a href="#delete-modal"
-                data-action="@Url.Action("Delete", "Notice")"
-                data-resource-id="@notice.Id"
+                data-action="@Url.Action("Delete", "Notice", new {id = notice.Id})"
                 data-resource-name="notice"
                 data-toggle="modal" class="btn btn-danger">Delete</a>
         </div>

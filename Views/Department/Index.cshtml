@@ -38,8 +38,7 @@
                             <td><a asp-action="Edit" asp-controller="Department" asp-route-id="@department.Id" class="btn btn-outline-primary">Edit</a></td>
                             <td>
                                <a href="#delete-modal" 
-                                    data-action='@Url.Action("Delete", "Department")'
-                                    data-resource-id="@department.Id"
+                                    data-action='@Url.Action("Delete", "Department", new {id = department.Id})'
                                     data-resource-name="Department"
                                     role="button" 
                                     class="btn btn-outline-danger" 
