@@ -59,15 +59,14 @@
     <div class="mb-3" style="margin-bottom:2rem;">
         <label asp-for="Roles" class="form-label"></label>
         <div style="display:flex; margin-left:2rem; justify-content:start;">
-            @for(int i=0; i<Model.RoleCheckboxes.Count; i ++){
+            @for(int i=0; i<Model.Roles.Count; i ++){
                 <div class="form-check flex-item">
                     <label class="form-check-label" 
-                        asp-for="@Model.RoleCheckboxes[i].Selected">@Model.RoleCheckboxes[i].Text</label>
+                        asp-for="@Model.Roles[i].Selected">@Model.Roles[i].Text</label>
                     <input class="form-check-input" 
-                        asp-for="@Model.RoleCheckboxes[i].Selected">
-                    <input type="hidden" asp-for="@Model.RoleCheckboxes[i].Value">
+                        asp-for="@Model.Roles[i].Selected">
+                    <input type="hidden" asp-for="@Model.Roles[i].Value">
                 </div>
-
             }
         </div>
     </div>

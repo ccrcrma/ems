@@ -21,6 +21,16 @@ namespace ems.Areas.Identity.Models
         public List<UserRole> UserRoles { get; set; } = new List<UserRole>();
         public Department Department { get; set; }
 
+        public string Name
+        {
+            get
+            {
+                return LastName + FirstName;
+            }
+        }
+
+
+
         internal UserDTO ToDTO()
         {
             return new UserDTO
@@ -46,7 +56,6 @@ namespace ems.Areas.Identity.Models
                 StartDate = CreatedDate,
                 Post = Post,
                 PhoneNumber = PhoneNumber,
-                Roles = UserRoles.Select(ur => ur.Role).Select(r => r.Name).ToArray()
             };
         }
     }

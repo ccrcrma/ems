@@ -1,0 +1,44 @@
+@model List<ApplicationRole>
+@{
+    ViewBag.Title = "All roles";
+    int i =1;
+}
+<partial name="_DeleteConfirmationModal"></partial>
+
+<h3 class="page-header"> All Roles coming soon</h3>
+
+<table class="table table-bordered table-striped display datatable-1">
+    <thead>
+        <tr>
+            <th>S.N.</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach(var role in Model){
+            <tr>
+                <td>@(i++)</td>
+                <td>@role.Name</td>
+                <td>@role.Description</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@role.Name" class="btn btn-primary">Edit</a>
+                </td>
+                <td>
+                    <a  href="#delete-modal" 
+                        data-toggle="modal"
+                        data-resource-name="Role"
+                        data-action="@Url.RouteUrl("DeleteRole",  new {id =role.Id })"
+                        class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <partial name="_PagingJavascriptImports"></partial>
+}

@@ -1,0 +1,146 @@
+@model PermissionEditModel
+@{
+    ViewBag.Title = "Edit Permission";
+}
+
+<h3 class="page-header">Edit Permission for Role @Context.Request.RouteValues["id"]</h3>
+
+
+<form asp-action="Edit">
+    <table class="table table-bordered table-striped display">
+        <thead>
+            <tr>
+                <th>Permission</th>
+                <th>can-add</th>
+                <th>can-edit</th>
+                <th>can-delete</th>
+                <th>can-view</th>
+                <th>can-list</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Department) </td>
+                <td>
+                    <input asp-for="@Model.Department.Create.Value" type="hidden">
+                    <input asp-for="@Model.Department.Create.Selected">
+                </td>
+                <td>
+                    <input asp-for="@Model.Department.Edit.Value" type="hidden">
+                    <input asp-for="@Model.Department.Edit.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Department.Delete.Value" type="hidden">
+                    <input asp-for="@Model.Department.Delete.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Department.View.Value" type="hidden">
+                    <input asp-for="@Model.Department.View.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Department.List.Value" type="hidden">
+                    <input asp-for="@Model.Department.List.Selected"></td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Role) </td>
+                <td>
+                    <input asp-for="@Model.Role.Create.Value" type="hidden">
+                    <input asp-for="@Model.Role.Create.Selected">
+                </td>
+                <td>
+                    <input asp-for="@Model.Role.Edit.Value" type="hidden">
+                    <input asp-for="@Model.Role.Edit.Selected">
+                </td>
+                <td>
+                    <input asp-for="@Model.Role.Delete.Value" type="hidden">
+                    <input asp-for="@Model.Role.Delete.Selected">
+                </td>
+                <td>
+                    <input asp-for="@Model.Role.View.Value" type="hidden">
+                    <input asp-for="@Model.Role.View.Selected">
+                </td>
+                <td>
+                    <input asp-for="@Model.Role.List.Value" type="hidden">
+                    <input asp-for="@Model.Role.List.Selected">
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Permission) </td>
+                <td>
+                    <input asp-for="@Model.Permission.Create.Value" type="hidden">
+                    <input asp-for="@Model.Permission.Create.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Permission.Edit.Value" type="hidden">
+                    <input asp-for="@Model.Permission.Edit.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Permission.Delete.Value" type="hidden">
+                    <input asp-for="@Model.Permission.Delete.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Permission.View.Value" type="hidden">
+                    <input asp-for="@Model.Permission.View.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Permission.List.Value" type="hidden">
+                    <input asp-for="@Model.Permission.List.Selected"></td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.User) </td>
+                <td>
+                    <input asp-for="@Model.User.Create.Value" type="hidden">
+                    <input asp-for="@Model.User.Create.Selected"></td>
+                <td>
+                    <input asp-for="@Model.User.Edit.Value" type="hidden">
+                    <input asp-for="@Model.User.Edit.Selected"></td>
+                <td>
+                    <input asp-for="@Model.User.Delete.Value" type="hidden">
+                    <input asp-for="@Model.User.Delete.Selected"></td>
+                <td>
+                    <input asp-for="@Model.User.View.Value" type="hidden">
+                    <input asp-for="@Model.User.View.Selected"></td>
+                <td>
+                    <input asp-for="@Model.User.List.Value" type="hidden">
+                    <input asp-for="@Model.User.List.Selected"></td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Notice) </td>
+                <td>
+                    <input asp-for="@Model.Notice.Create.Value" type="hidden">
+                    <input asp-for="@Model.Notice.Create.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Notice.Edit.Value" type="hidden">
+                    <input asp-for="@Model.Notice.Edit.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Notice.Delete.Value" type="hidden">
+                    <input asp-for="@Model.Notice.Delete.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Notice.View.Value" type="hidden">
+                    <input asp-for="@Model.Notice.View.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Notice.List.Value" type="hidden">
+                    <input asp-for="@Model.Notice.List.Selected"></td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Leave) </td>
+                <td>
+                    <input asp-for="@Model.Leave.Create.Value" type="hidden">
+                    <input asp-for="@Model.Leave.Create.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Leave.Edit.Value" type="hidden">
+                    <input asp-for="@Model.Leave.Edit.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Leave.Delete.Value" type="hidden">
+                    <input asp-for="@Model.Leave.Delete.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Leave.View.Value" type="hidden">
+                    <input asp-for="@Model.Leave.View.Selected"></td>
+                <td>
+                    <input asp-for="@Model.Leave.List.Value" type="hidden">
+                    <input asp-for="@Model.Leave.List.Selected"></td>
+            </tr>
+
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Mail) </td>
+                <td colspan="5">
+                    <input asp-for="@Model.Mail.Value" type="hidden">
+                    <input asp-for="@Model.Mail.Selected"></td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary" style="display:inline-block; margin-top:1rem;">Update</button>
+</form>

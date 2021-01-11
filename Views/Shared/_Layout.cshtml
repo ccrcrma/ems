@@ -74,10 +74,10 @@
                                         Departments </a>
                                     <ul id="toggleDepartmentLinks" class="collapse unstyled">
                                         <li>
-                                            <a asp-action="Create" asp-controller="Department">Create </a>
+                                            <a asp-action="Create" asp-controller="Department" asp-area="">Create </a>
                                         </li>
                                         <li>
-                                            <a asp-action="Index" asp-controller="Department">View</a>
+                                            <a asp-action="Index" asp-controller="Department" asp-area="">View</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -92,8 +92,8 @@
                                             <i class="icon-chevron-down pull-right"></i>
                                             Role </a>
                                         <ul id="toggleRoles" class="collapse unstyled">
-                                            <li><a href="other-login.html">Create </a></li>
-                                            <li><a href="other-user-profile.html">View </a></li>
+                                            <li><a asp-action="Create" asp-controller="Role" asp-area="Identity">Create </a></li>
+                                            <li><a asp-action="Index" asp-controller="Role" asp-area="Identity">View </a></li>
                                         </ul>
                                         <a class="collapsed" data-toggle="collapse" href="#toggleUsers">
                                             <i class="icon-chevron-down pull-right"></i>
@@ -108,7 +108,7 @@
                                             Persmission </a>
                                         <ul id="togglePermissions" class="collapse unstyled">
                                             <li><a href="other-login.html">Create </a></li>
-                                            <li><a href="other-user-profile.html">View </a>
+                                            <li><a asp-action="Index" asp-controller="Permission" asp-area="Identity">View </a>
                                             </li>
                                         </ul>
                                     </div>

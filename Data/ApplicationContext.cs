@@ -8,9 +8,9 @@ using Microsoft.Extensions.Logging;
 
 namespace ems.Data
 {
-    public class ApplicationContext : IdentityDbContext<ApplicationUser, IdentityRole, string,
+    public class ApplicationContext : IdentityDbContext<ApplicationUser, ApplicationRole, string,
         IdentityUserClaim<string>, UserRole, IdentityUserLogin<string>,
-        IdentityRoleClaim<string>, IdentityUserToken<string>>
+        ApplicationRoleClaim, IdentityUserToken<string>>
     {
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
@@ -85,9 +85,18 @@ namespace ems.Data
                     .WithMany(u => u.UserRoles)
                     .HasForeignKey(ur => ur.UserId)
                     .IsRequired();
-                userRole.HasOne<IdentityRole>(r => r.Role)
-                    .WithMany()
+                userRole.HasOne<ApplicationRole>(r => r.Role)
+                    .WithMany(r => r.UserRoles)
                     .HasForeignKey(r => r.RoleId)
+                    .IsRequired();
+            });
+            modelBuilder.Entity<ApplicationRole>(role =>
+            {
+                role.Property(r => r.Description).IsRequired().HasMaxLength(300);
+
+                role.HasMany<ApplicationRoleClaim>(r => r.RoleClaims)
+                    .WithOne(rc => rc.Role)
+                    .HasForeignKey(rc => rc.RoleId)
                     .IsRequired();
             });
         }

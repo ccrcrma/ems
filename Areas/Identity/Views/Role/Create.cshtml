@@ -1,0 +1,25 @@
+@model RoleViewModel
+@{
+    ViewBag.Title = "Create Role";
+}
+
+<h3 class="page-header">Create Role</h3>
+<form asp-action="Create">
+    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control">
+        <span class="text-danger" asp-validation-for="Name"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"> </textarea>
+        <span class="text-danger" asp-validation-for="Description"></span>
+    </div>
+    
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"></partial>
+}

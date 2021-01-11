@@ -1,0 +1,38 @@
+@model List<RoleViewModel>
+@{
+    ViewBag.Title = "Permission";
+    int i =1;
+}
+
+<partial name="_DeleteConfirmationModal"></partial>
+
+<h3 class="page-header">All Permissions</h3>
+
+<table class="table table-bordered table-striped display">
+    <thead>
+        <tr>
+            <th>S.N.</th>
+            <th>Name</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var roleVm in Model ){
+
+        <tr>
+            <td>@(i++)</td>
+            <td>@roleVm.Name</td>
+            <td><a asp-action="Edit" asp-controller="Permission" asp-area="Identity" asp-route-id="@roleVm.Name" class="btn btn-primary">Edit</a></td>
+            <td>
+                <a  data-toggle="modal"
+                    class="btn btn-danger"
+                    data-resource-name="Role"
+                    data-action="@Url.RouteUrl("DeleteRole", new {id =roleVm.Id})"
+                    href="#delete-modal">Delete
+                    </a>
+                </td>
+        </tr>
+        }
+    </tbody>
+</table>

@@ -8,6 +8,11 @@ namespace ems.Helpers.Alert
         {
             return Alert(result, "success", title, body);
         }
+        public static ActionResult WithDanger(this ActionResult result, string title, string body)
+        {
+            return Alert(result, "danger", title, body);
+        }
+
 
         private static ActionResult Alert(ActionResult result, string type, string title, string body)
         {

@@ -12,6 +12,7 @@ using ems.Helpers.Alert;
 using System;
 using static ems.Areas.Identity.ViewModels.UserRegistrationViewModel;
 using static ems.Areas.Identity.ViewModels.UserViewModel;
+using ems.Util;
 
 namespace ems.Areas.Identity.Controllers
 {
@@ -21,12 +22,12 @@ namespace ems.Areas.Identity.Controllers
     {
         private readonly ApplicationContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
         public AccountController(
             ApplicationContext context,
             UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<ApplicationRole> roleManager)
         {
             _context = context;
             _userManager = userManager;
@@ -66,12 +67,7 @@ namespace ems.Areas.Identity.Controllers
             else if (vm is UserViewModel userVm)
             {
                 userVm.Departments = departmentOptions;
-                userVm.RoleCheckboxes = roles.Select(role => new RoleCheckbox
-                {
-                    Text = role.Name,
-                    Value = role.Id,
-                    Selected = userVm.Roles.Contains(role.Name)
-                }).ToList();
+                userVm.CreateCheckBoxes(roleOptions);
                 return userVm;
             }
             throw new ArgumentException("Invalid Argument");
@@ -155,11 +151,15 @@ namespace ems.Areas.Identity.Controllers
             var user = (await _context.Users
                 .Include(u => u.UserRoles)
                     .ThenInclude(r => r.Role)
-                .FirstOrDefaultAsync(u => u.Id == id))
-                .ToViewModel();
+                .FirstOrDefaultAsync(u => u.Id == id));
+
             if (user == null) return NotFound();
-            user = (UserViewModel)await populateDropDownAsync(user);
-            return View(user);
+
+            var userRoles = user.UserRoles?.Select(ur => ur.Role).Select(r => r.Id).ToArray();
+            var userVm = user.ToViewModel();
+            userVm = (UserViewModel)await populateDropDownAsync(userVm);
+            userVm.SetCheckBoxes(userRoles);
+            return View(userVm);
         }
 
         [HttpPost]
@@ -180,7 +180,7 @@ namespace ems.Areas.Identity.Controllers
             user.CreatedDate = vm.StartDate;
 
             user.UserRoles = new List<UserRole>();
-            var selectedRoles = vm.RoleCheckboxes.Where(r => r.Selected == true).Select(r => r.Value).ToList();
+            var selectedRoles = vm.Roles.Where(r => r.Selected == true).Select(r => r.Value).ToList();
             var roles = await _roleManager.Roles.Where(r => selectedRoles.Contains(r.Id)).ToListAsync();
             foreach (var role in roles)
             {
@@ -193,7 +193,7 @@ namespace ems.Areas.Identity.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("[Action]/{id}", Name="DeleteUser")]
+        [Route("[Action]/{id}", Name = "DeleteUser")]
         public async Task<IActionResult> DeleteAsync(string id)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);

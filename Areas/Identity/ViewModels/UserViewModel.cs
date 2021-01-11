@@ -2,18 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ems.Areas.Identity.Types;
+using ems.Util;
+using ems.Areas.Identity.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
 
 namespace ems.Areas.Identity.ViewModels
 {
     public class UserViewModel
     {
-        public class RoleCheckbox
-        {
-            public string Text { get; set; }
-            public string Value { get; set; }
-            public bool Selected { get; set; }
-        }
 
         [Required(ErrorMessage = "{0} is Required")]
         [StringLength(100, ErrorMessage = "{0} should be between {2} and {1}", MinimumLength = 2)]
@@ -55,9 +52,32 @@ namespace ems.Areas.Identity.ViewModels
         [Required(ErrorMessage = "{0} is Required")]
         public string PhoneNumber { get; set; }
 
-        public string[] Roles;
+        public void CreateCheckBoxes(List<SelectListItem> allCheckBoxes)
+        {
+            foreach (var role in allCheckBoxes)
+            {
+                Roles.Add(new Checkbox
+                {
+                    Text = role.Text,
+                    Value = role.Value,
+                    Selected = false
+                });
+            }
+        }
+
+        public void SetCheckBoxes(string[] selectedCheckBoxes)
+        {
+            foreach (var role in Roles)
+            {
+                if (selectedCheckBoxes.Contains(role.Value))
+                {
+                    role.Selected = true;
+                    continue;
+                }
+            }
+        }
         public List<SelectListItem> Departments { get; set; }
-        public List<RoleCheckbox> RoleCheckboxes { get; set; }
+        public List<Checkbox> Roles { get; set; } = new List<Checkbox>();
 
 
     }

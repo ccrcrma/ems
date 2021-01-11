@@ -6,7 +6,7 @@ namespace ems.Areas.Identity.Models
     public class UserRole : IdentityUserRole<string>
     {
         public ApplicationUser User { get; set; }
-        public IdentityRole Role { get; set; }
+        public ApplicationRole Role { get; set; }
 
 
 

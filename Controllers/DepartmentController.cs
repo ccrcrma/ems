@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ems.Helpers.Alert;
+using Microsoft.AspNetCore.Authorization;
+using ems.Helpers.Permissions;
 
 namespace ems.Controllers
 {
+    // [Authorize]
     public class DepartmentController : Controller
     {
         private readonly ApplicationContext _context;
@@ -17,6 +20,8 @@ namespace ems.Controllers
         {
             _context = context;
         }
+
+        // [Authorize(Permissions.Department.Create)]
         [HttpGet]
         public IActionResult Create()
         {
@@ -24,6 +29,7 @@ namespace ems.Controllers
         }
 
         [HttpGet]
+        // [Authorize(Permissions.Department.List)]
         public async Task<IActionResult> IndexAsync()
         {
             var departments = await _context.Departments.Select(d => new DepartmentViewModel
@@ -35,7 +41,9 @@ namespace ems.Controllers
             }).ToListAsync();
             return View(departments);
         }
+
         [HttpGet]
+        // [Authorize(Permissions.Department.Edit)]
         public async Task<IActionResult> EditAsync(int id)
         {
             var departmentVm = (await _context.Departments
@@ -50,6 +58,8 @@ namespace ems.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // [Authorize(Permissions.Department.Delete)]
+
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var department = await _context.Departments.FirstOrDefaultAsync(d => d.Id == id);
@@ -65,6 +75,8 @@ namespace ems.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // [Authorize(Permissions.Department.Edit)]
+
         public async Task<IActionResult> Edit(int id, DepartmentViewModel departmentVm)
         {
             if (!ModelState.IsValid)
@@ -85,6 +97,8 @@ namespace ems.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // [Authorize(Permissions.Department.Create)]
+
         public async Task<IActionResult> CreateAsync(DepartmentViewModel departmentVm)
         {
             if (!ModelState.IsValid)

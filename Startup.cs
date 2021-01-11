@@ -5,8 +5,12 @@ using System.Threading.Tasks;
 using ems.Areas.Identity.Data;
 using ems.Areas.Identity.Models;
 using ems.Data;
+using ems.Handlers;
+using ems.Helpers.Permissions;
+using ems.Requirements;
 using ems.Services;
 using ems.Settings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -48,7 +52,7 @@ namespace ems
             services.AddControllersWithViews();
             services.Configure<MailSetting>(Configuration.GetSection("MailSetting"));
             services.AddTransient<IMailService, MailService>();
-            services.AddIdentity<ApplicationUser, IdentityRole>(option =>
+            services.AddIdentity<ApplicationUser, ApplicationRole>(option =>
                 {
                     option.Password.RequiredLength = 5;
                     option.Password.RequireNonAlphanumeric = false;
@@ -57,8 +61,17 @@ namespace ems
                 }
             )
                 .AddEntityFrameworkStores<ApplicationContext>();
+
             var serviceProvider = services.BuildServiceProvider();
-            SampleData.Initialize(serviceProvider);
+            Task.Run(() => SampleData.Initialize(serviceProvider));
+            services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Permissions.Department.View, builder =>
+                {
+                    builder.AddRequirements(new PermissionRequirement(Permissions.Department.View));
+                });
+            });
 
         }
 
