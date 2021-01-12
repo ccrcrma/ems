@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using ems.Data;
 using ems.Helpers.Alert;
+using ems.Helpers.Permissions;
 using ems.Models;
 using ems.Services;
 using ems.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +18,7 @@ using static ems.ViewModels.MailViewModel;
 namespace ems.Controllers
 {
     [Route("[controller]")]
+    [Authorize(Permissions.Mail)]
     public class MailController : Controller
     {
         private readonly ILogger<MailController> _logger;

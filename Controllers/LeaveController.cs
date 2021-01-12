@@ -4,7 +4,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ems.Data;
+using ems.Handlers;
 using ems.Helpers;
+using static ems.Helpers.LeaveRequirement.LeaveRequirementHelpers;
 using ems.Helpers.Alert;
 using ems.Helpers.Permissions;
 using ems.Models;
@@ -21,11 +23,13 @@ namespace ems.Controllers
     {
         private ApplicationContext _context;
         private readonly ILogger<LeaveController> _logger;
+        private readonly IAuthorizationService _authorizationService;
 
-        public LeaveController(ApplicationContext context, ILogger<LeaveController> logger)
+        public LeaveController(ApplicationContext context, ILogger<LeaveController> logger, IAuthorizationService authorizationService)
         {
             _context = context;
             _logger = logger;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -42,6 +46,7 @@ namespace ems.Controllers
             var ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var allLeaves = await _context.Leaves
                 .Include(l => l.Reply)
+                .Include(l => l.Owner)
                 .Where(l => l.OwnerId == ownerId)
                 .Select(l => l.ToViewModel())
                 .ToListAsync();
@@ -86,11 +91,29 @@ namespace ems.Controllers
         [HttpGet]
         public async Task<IActionResult> EditAsync(int id)
         {
-            var leave = (await _context.Leaves.FirstOrDefaultAsync(l => l.Id == id)).ToViewModel();
+            var leave = await _context.Leaves
+                .Include(l => l.Reply)
+                .FirstOrDefaultAsync(l => l.Id == id);
             if (leave == null)
                 return NotFound();
-            return View(leave);
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, leave, GetRequirementForLeave(leave));
+            if (authorizationResult.Succeeded)
+            {
+                var leaveVm = leave.ToViewModel();
+                return View(leaveVm);
+            }
+            else if (User.Identity.IsAuthenticated)
+            {
+                return new ForbidResult();
+            }
+            else
+            {
+                return new ChallengeResult();
+            }
         }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditAsync(int id, LeaveViewModel leaveVm)
@@ -99,29 +122,65 @@ namespace ems.Controllers
             {
                 return View(leaveVm);
             }
-            var leave = await _context.Leaves.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id);
+            var leave = await _context.Leaves
+                .Include(l => l.Owner)
+                .Include(l => l.Reply)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(l => l.Id == id);
+
             if (leave == null)
             {
                 return BadRequest();
             }
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, leave, GetRequirementForLeave(leave));
+            if (authorizationResult.Succeeded)
+            {
 
-            leave = leaveVm.ToModel();
-            _context.Entry(leave).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Home").WithSuccess("hurray", $"leave with id {leave.Id} was updated");
+                leave = leaveVm.ToModel();
+                leave.OwnerId  =User.FindFirstValue(ClaimTypes.NameIdentifier);
+                _context.Entry(leave).State = EntityState.Modified;
 
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Home").WithSuccess("hurray", $"leave with id {leave.Id} was updated");
+            }
+            else if (User.Identity.IsAuthenticated)
+            {
+                return new ForbidResult();
+            }
+            else
+            {
+                return new ChallengeResult();
+            }
         }
 
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var leave = await _context.Leaves.FirstOrDefaultAsync(l => l.Id == id);
+            var leave = await _context.Leaves
+                .Include(l => l.Owner)
+                .Include(l => l.Reply)
+                .FirstOrDefaultAsync(l => l.Id == id);
             if (leave == null)
                 return BadRequest();
-            _context.Entry(leave).State = EntityState.Deleted;
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Create").WithSuccess("", $"leave with id {id} deleted successfully");
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, leave, GetRequirementForLeave(leave));
+            if (authorizationResult.Succeeded)
+            {
+                _context.Entry(leave).State = EntityState.Deleted;
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Create").WithSuccess("", $"leave with id {id} deleted successfully");
+
+            }
+            else if (User.Identity.IsAuthenticated)
+            {
+                return new ForbidResult();
+            }
+            else
+            {
+                return new ChallengeResult();
+            }
+
         }
 
         [HttpPost]

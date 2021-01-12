@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Authorization
+@using ems.Helpers.Permissions
+@inject IAuthorizationService _authorizationService
 @model List<NoticeViewModel>
 @{
     ViewBag.Title = "Notices";
@@ -5,19 +8,21 @@
 
 <partial name=_DeleteConfirmationModal></partial>
 <h3 class="page-header">All notices</h3>
-@foreach(var notice in Model){
-    
+@foreach (var notice in Model)
+{
+
     <div class="notice">
-        <p class="notice-title">@notice.Title</p>
-        <p class="notice-description">@notice.Description</p>
-        <span class="badge badge-success">@notice.CreatedDate.Value.ToShortDateString()</span>
-        <span class="badge badge-warning">@notice.OwnerName</span>
-        <div class="notice-actions">
-            <a asp-action="Edit" asp-route-id="@notice.Id" class="btn btn-primary">Edit</a>
-            <a href="#delete-modal"
-                data-action="@Url.Action("Delete", "Notice", new {id = notice.Id})"
-                data-resource-name="notice"
-                data-toggle="modal" class="btn btn-danger">Delete</a>
-        </div>
+    <p class="notice-title">@notice.Title</p>
+    <p class="notice-description">@notice.Description</p>
+    <span class="badge badge-success">@notice.CreatedDate.Value.ToShortDateString()</span>
+    <span class="badge badge-warning">@notice.OwnerName</span>
+    @if ((await _authorizationService.AuthorizeAsync(User, Permissions.Notice.Edit)).Succeeded)
+        {
+            <div class="notice-actions">
+                <a asp-action="Edit" asp-route-id="@notice.Id" class="btn btn-primary">Edit</a>
+                <a href="#delete-modal" data-action="@Url.Action("Delete", "Notice", new {id = notice.Id})"
+                    data-resource-name="notice" data-toggle="modal" class="btn btn-danger">Delete</a>
+            </div>
+        }
     </div>
 }

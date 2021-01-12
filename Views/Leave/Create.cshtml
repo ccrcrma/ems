@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Authorization
+@using static ems.Helpers.LeaveRequirement.LeaveRequirementHelpers;
+@inject IAuthorizationService _authService
 @model LeaveCreateIndexViewModel
 @{
     ViewBag.Title = "Create Leave";
@@ -81,17 +84,28 @@
 
                         </td>
                         <td>@myleave.Reply?.Description</td>
-                        <td>
-                            <a asp-action="Edit" asp-controller="Leave" asp-route-id="@myleave.Id" class="btn btn-primary">Edit</a >
-                        </td>
-                        <td>
-                            <a  href="#delete-modal" 
-                                data-toggle="modal" 
-                                data-resource-name="Leave"
-                                data-resource-id="@myleave.Id"
-                                data-action="@Url.Action("Delete", "Leave")"
-                                class="btn btn-danger">Delete</a>
-                        </td>
+                        @{
+                            var leave = new Leave(){OwnerId = myleave.OwnerId, Reply = myleave.Reply};
+                            var requirement = GetRequirementForLeave(leave);
+                            var result = await  _authService.AuthorizeAsync(User,leave,requirement);
+                            if(result.Succeeded){
+                                <td>
+                                    <a asp-action="Edit" asp-controller="Leave" asp-route-id="@myleave.Id" class="btn btn-primary">Edit</a >
+                                </td>
+                        
+                                <td>
+                                    <a  href="#delete-modal" 
+                                        data-toggle="modal" 
+                                        data-resource-name="Leave"
+                                        data-resource-id="@myleave.Id"
+                                        data-action="@Url.Action("Delete", "Leave", new {id = myleave.Id})"
+                                        class="btn btn-danger">Delete</a>
+                                </td>
+                            }else{
+                                <td></td>
+                                <td></td>
+                            }
+                        }
                     </tr>
                 }
             </tbody>

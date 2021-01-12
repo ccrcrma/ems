@@ -79,6 +79,7 @@ namespace ems.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Permissions.Notice.Create)]
 
         public async Task<IActionResult> CreateAsync(NoticeViewModel noticeVm)
         {

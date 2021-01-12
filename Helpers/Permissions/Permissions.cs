@@ -40,7 +40,21 @@ namespace ems.Helpers.Permissions
         public static class Notice
         {
             public const string Create = "Permissions.Notice.Create";
+            public const string Edit = "Permissions.Notice.Edit";
+            public const string Delete = "Permissions.Notice.Delete";
 
         }
+
+        public static class Role
+        {
+            public const string Create = "Permissions.Role.Create";
+            public const string View = "Permissions.Role.View";
+            public const string Edit = "Permissions.Role.Edit";
+            public const string Delete = "Permissions.Role.Delete";
+            public const string List = "Permissions.Role.List";
+        }
+
+        public const string Mail = "Permissions.Mail";
     }
+
 }

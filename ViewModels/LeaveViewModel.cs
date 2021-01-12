@@ -19,9 +19,12 @@ namespace ems.ViewModels
 
         [Required(ErrorMessage = "{0} is Required")]
         public string Description { get; set; }
+        public string OwnerId { get; set; }
+
+
 
         public string OwnerName { get; set; }
-        
+
 
         public LeaveType Leave { get; set; }
 
@@ -35,7 +38,8 @@ namespace ems.ViewModels
                 To = To,
                 Description = Description,
                 Type = Leave,
-                Id = Id
+                Id = Id,
+                OwnerId = OwnerId
             };
         }
 

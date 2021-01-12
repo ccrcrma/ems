@@ -27,7 +27,7 @@ namespace ems.Models
 
         public string OwnerId { get; set; }
 
-        public ApplicationUser Owner {get;set;}
+        public ApplicationUser Owner { get; set; }
         internal LeaveViewModel ToViewModel()
         {
             return new LeaveViewModel
@@ -38,6 +38,7 @@ namespace ems.Models
                 Description = Description,
                 Leave = Type,
                 Reply = Reply,
+                OwnerId = Owner?.Id,
                 OwnerName = Owner?.Name
             };
         }

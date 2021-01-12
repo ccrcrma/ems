@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using ems.Helpers.Permissions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ems.Areas.Identity.Controllers
 {
@@ -36,6 +38,7 @@ namespace ems.Areas.Identity.Controllers
 
         [HttpGet]
         [Route("Roles")]
+        [Authorize(Permissions.Role.List)]
         public async Task<IActionResult> IndexAsync()
         {
             var roles = await _roleManager.Roles.ToListAsync();
@@ -44,6 +47,9 @@ namespace ems.Areas.Identity.Controllers
 
         [Route("[Action]")]
         [HttpGet]
+        [Authorize(Permissions.Role.Create)]
+
+
         public IActionResult Create()
         {
             if (Request.Method == HttpMethod.Post.ToString())
@@ -61,6 +67,8 @@ namespace ems.Areas.Identity.Controllers
         [HttpPost]
         [Route("[Action]")]
         [ValidateAntiForgeryToken]
+        [Authorize(Permissions.Role.Create)]
+
         public async Task<IActionResult> CreateAsync(RoleViewModel roleVm)
         {
             if (!ModelState.IsValid)
@@ -92,6 +100,8 @@ namespace ems.Areas.Identity.Controllers
 
         [HttpGet]
         [Route("[Action]/{id}")]
+        [Authorize(Permissions.Role.Edit)]
+
         public async Task<IActionResult> EditAsync(string id)
         {
             if (id == null) return BadRequest();
@@ -118,6 +128,8 @@ namespace ems.Areas.Identity.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("[Action]/{id}")]
+        [Authorize(Permissions.Role.Edit)]
+
         public async Task<IActionResult> EditAsync(string id, RoleViewModel roleVm)
         {
             if (!ModelState.IsValid)
@@ -159,6 +171,8 @@ namespace ems.Areas.Identity.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("[Action]/{id}", Name = "DeleteRole")]
+        [Authorize(Permissions.Role.Delete)]
+
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null) return BadRequest();

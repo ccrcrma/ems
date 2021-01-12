@@ -71,6 +71,7 @@ namespace ems
             Task.Run(() => SampleData.Initialize(serviceProvider));
             services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+            services.AddSingleton<IAuthorizationHandler, LeaveAuthorizationHandler>();
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/account/signin";
