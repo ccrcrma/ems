@@ -13,6 +13,8 @@ using System;
 using static ems.Areas.Identity.ViewModels.UserRegistrationViewModel;
 using static ems.Areas.Identity.ViewModels.UserViewModel;
 using ems.Util;
+using Microsoft.AspNetCore.Authorization;
+using ems.Helpers.Permissions;
 
 namespace ems.Areas.Identity.Controllers
 {
@@ -23,18 +25,22 @@ namespace ems.Areas.Identity.Controllers
         private readonly ApplicationContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public AccountController(
             ApplicationContext context,
             UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
         [Route("[Action]")]
+        [Authorize(Permissions.User.Create)]
         public async Task<IActionResult> CreateAsync()
         {
             var vm = new UserRegistrationViewModel();
@@ -76,6 +82,7 @@ namespace ems.Areas.Identity.Controllers
 
         [HttpPost("[Action]")]
         [ValidateAntiForgeryToken]
+        [Authorize(Permissions.User.Create)]
         public async Task<IActionResult> CreateAsync(
             [Bind(Prefix = "GeneralInfo")] UserRegistrationViewModel.GeneralInformation generalInfo,
             [Bind(Prefix = "LoginInfo")] UserRegistrationViewModel.LoginInformation loginInfo)
@@ -121,6 +128,7 @@ namespace ems.Areas.Identity.Controllers
         }
 
         [HttpGet("Users")]
+        [Authorize(Permissions.User.List)]
         public async Task<IActionResult> IndexAsync()
         {
             var users = await _context.Users
@@ -145,6 +153,7 @@ namespace ems.Areas.Identity.Controllers
         }
 
         [Route("[Action]/{id}")]
+        [Authorize(Permissions.User.Edit)]
         [HttpGet]
         public async Task<IActionResult> EditAsync(string id)
         {
@@ -165,6 +174,8 @@ namespace ems.Areas.Identity.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("[Action]/{id}")]
+        [Authorize(Permissions.User.Edit)]
+
         public async Task<IActionResult> EditAsync(string id, UserViewModel vm)
         {
             if (!ModelState.IsValid) return View(vm);
@@ -194,6 +205,8 @@ namespace ems.Areas.Identity.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("[Action]/{id}", Name = "DeleteUser")]
+        [Authorize(Permissions.User.Delete)]
+
         public async Task<IActionResult> DeleteAsync(string id)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
@@ -202,6 +215,55 @@ namespace ems.Areas.Identity.Controllers
             _context.Entry(user).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index").WithSuccess(string.Empty, $"user  {user.LastName} {user.FirstName} deleted ");
+        }
+
+        [HttpGet]
+        [Route("[Action]")]
+        [AllowAnonymous]
+        public IActionResult SignIn()
+        {
+            return View();
+        }
+
+        [HttpPost("[Action]")]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> SignInAsync(SignInViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var user = await _userManager.FindByEmailAsync(viewModel.Email);
+            if (user != null)
+            {
+                var result = await _signInManager.PasswordSignInAsync(user, viewModel.Password, viewModel.RememberMe, false);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home", new { Area = "" });
+                }
+                else if (result.IsLockedOut)
+                {
+                    ModelState.AddModelError(string.Empty, "Account is Locked Out");
+                }
+                else if (result.IsNotAllowed)
+                {
+                    ModelState.AddModelError(string.Empty, "Not allowed");
+                }
+            }
+
+            ModelState.AddModelError(string.Empty, "Email and Password not correct");
+            return View(viewModel);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOutAsync()
+        {
+            await _signInManager.SignOutAsync();
+            return LocalRedirect("~/");
         }
     }
 

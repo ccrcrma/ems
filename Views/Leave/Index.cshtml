@@ -32,7 +32,7 @@
                 @foreach (var leave in Model)
                 {
                     <tr>
-                        <td>dummy user</td>
+                        <td>@leave.OwnerName</td>
                         <td>@leave.From.ToShortDateString()</td>
                         <td>@leave.To.ToShortDateString()</td>
                         <td>@leave.Description</td>
@@ -40,7 +40,7 @@
                         <td>
                             @{
                                 var leaveStatus = leave.Reply?.Status;
-                                string actionColor= "info";
+                                string actionColor= "secondary";
                                 switch(leaveStatus){
                                     case Reply.ReplyStatus.Approved:
                                         actionColor = "success";
@@ -50,7 +50,7 @@
                                         break;
                                 }
                             }
-                            <span class="btn btn-@actionColor">@leave.Reply?.Status.ToString() </span>
+                            <span class="btn btn-@actionColor">@(leaveStatus?.ToString() ?? "Pending") </span>
                         </td>
                         <td>@leave.Reply?.Description</td>
                         <td>

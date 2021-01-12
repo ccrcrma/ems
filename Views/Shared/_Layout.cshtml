@@ -17,27 +17,11 @@
 <nav class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <a asp-action="Index" asp-controller="Home" class="brand" style="text-transform: uppercase;">Ems </a>
+            <a asp-action="Home" asp-controller="Home" asp-area="" class="brand" style="text-transform: uppercase;">Ems
+            </a>
             <a href="never-get-here.html" class="sidebar-toggler" id="sidebar-toggler"
                 style="font-size: 1.4rem; display:inline-block; padding:20px; margin-left:9rem;"> &#x2630; </a>
-            <ul class="nav pull-right m-3">
-                <li class="nav-user dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <span style="vertical-align:top;">testuser</span>
-                        <img src="~/images/user.png" class="nav-avatar" />
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Your Profile</a></li>
-                        <li><a href="#">Edit Profile</a></li>
-                        <li><a href="#">Account Settings</a></li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">Logout</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+            <partial name="_SignedInPartial"></partial>
             <form class="navbar-search pull-right input-append" action="#">
                 <input type="text" class="span3" placeholder="Search for....">
                 <button class="btn btn-primary" type="button">
@@ -59,7 +43,8 @@
                             <p class="widget-header">Core</p>
                             <ul class="widget widget-menu unstyled">
                                 <li class="active">
-                                    <a asp-action="Index" asp-controller="Home" asp-area=""><i class="menu-icon icon-dashboard"></i>Dashboard</a>
+                                    <a asp-action="Index" asp-controller="Home" asp-area=""><i
+                                            class="menu-icon icon-dashboard"></i>Dashboard</a>
                                 </li>
                             </ul>
                         </div>
@@ -92,23 +77,27 @@
                                             <i class="icon-chevron-down pull-right"></i>
                                             Role </a>
                                         <ul id="toggleRoles" class="collapse unstyled">
-                                            <li><a asp-action="Create" asp-controller="Role" asp-area="Identity">Create </a></li>
-                                            <li><a asp-action="Index" asp-controller="Role" asp-area="Identity">View </a></li>
+                                            <li><a asp-action="Create" asp-controller="Role" asp-area="Identity">Create
+                                                </a></li>
+                                            <li><a asp-action="Index" asp-controller="Role" asp-area="Identity">View
+                                                </a></li>
                                         </ul>
                                         <a class="collapsed" data-toggle="collapse" href="#toggleUsers">
                                             <i class="icon-chevron-down pull-right"></i>
                                             Users </a>
                                         <ul id="toggleUsers" class="collapse unstyled">
-                                            <li><a asp-action="Create" asp-controller="Account" asp-area="Identity">Create </a></li>
-                                            <li><a asp-action="Index" asp-controller="Account" asp-area="Identity">View </a>
+                                            <li><a asp-action="Create" asp-controller="Account"
+                                                    asp-area="Identity">Create </a></li>
+                                            <li><a asp-action="Index" asp-controller="Account" asp-area="Identity">View
+                                                </a>
                                             </li>
                                         </ul>
                                         <a class="collapsed" data-toggle="collapse" href="#togglePermissions">
                                             <i class="icon-chevron-down pull-right"></i>
                                             Persmission </a>
                                         <ul id="togglePermissions" class="collapse unstyled">
-                                            <li><a href="other-login.html">Create </a></li>
-                                            <li><a asp-action="Index" asp-controller="Permission" asp-area="Identity">View </a>
+                                            <li><a asp-action="Index" asp-controller="Permission"
+                                                    asp-area="Identity">View </a>
                                             </li>
                                         </ul>
                                     </div>
@@ -120,8 +109,8 @@
                                         <i class="icon-chevron-up pull-right"></i>
                                         Staff Leave </a>
                                     <ul id="toggleLeaves" class="collapse unstyled">
-                                        <li><a asp-action="Index" asp-controller="Leave">Approve Leave </a></li>
-                                        <li><a asp-action="Create" asp-controller="Leave">Create Leave</a></li>
+                                        <li><a asp-action="Index" asp-controller="Leave" asp-area="">Approve Leave </a></li>
+                                        <li><a asp-action="Create" asp-controller="Leave" asp-area="">Create Leave</a></li>
                                     </ul>
                                 </li>
                                 <li>
@@ -131,11 +120,14 @@
                                         <i class="icon-chevron-up pull-right"></i>
                                         Staff Notices</a>
                                     <ul id="toggleNotices" class="collapse unstyled">
-                                        <li><a asp-action="Index" asp-controller="Notice" asp-area="">View Notice </a></li>
-                                        <li><a asp-action="Create" asp-controller="Notice" asp-area="">Create Notice </a></li>
+                                        <li><a asp-action="Index" asp-controller="Notice" asp-area="">View Notice </a>
+                                        </li>
+                                        <li><a asp-action="Create" asp-controller="Notice" asp-area="">Create Notice
+                                            </a></li>
                                     </ul>
                                 </li>
-                                <li><a asp-controller="Mail" asp-action="Create"><i class="menu-icon icon-envelope"></i>Mail </a></li>
+                                <li><a asp-controller="Mail" asp-action="Create"><i
+                                            class="menu-icon icon-envelope"></i>Mail </a></li>
                             </ul>
                         </div>
                     </div>

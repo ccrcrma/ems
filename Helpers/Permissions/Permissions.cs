@@ -10,5 +10,37 @@ namespace ems.Helpers.Permissions
             public const string Delete = "Permissions.Department.Delete";
             public const string List = "Permissions.Department.List";
         }
+        public static class Leave
+        {
+            public const string Create = "Permissions.Leave.Create";
+            public const string View = "Permissions.Leave.View";
+            public const string Edit = "Permissions.Leave.Edit";
+            public const string Delete = "Permissions.Leave.Delete";
+            public const string List = "Permissions.Leave.List";
+        }
+
+        public static class Permission
+        {
+            public const string Create = "Permissions.Permission.Create";
+            public const string View = "Permissions.Permission.View";
+            public const string Edit = "Permissions.Permission.Edit";
+            public const string Delete = "Permissions.Permission.Delete";
+            public const string List = "Permissions.Permission.List";
+        }
+
+        public static class User
+        {
+            public const string Create = "Permissions.User.Create";
+            public const string View = "Permissions.User.View";
+            public const string Edit = "Permissions.User.Edit";
+            public const string Delete = "Permissions.User.Delete";
+            public const string List = "Permissions.User.List";
+        }
+
+        public static class Notice
+        {
+            public const string Create = "Permissions.Notice.Create";
+
+        }
     }
 }

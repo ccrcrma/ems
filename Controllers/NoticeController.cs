@@ -1,9 +1,12 @@
 using ems.Data;
 using ems.Helpers.Alert;
+using ems.Helpers.Permissions;
 using ems.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ems.Controllers
@@ -20,11 +23,16 @@ namespace ems.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-            var notices = await _context.Notices.Select(n => n.ToViewModel()).AsNoTracking().ToListAsync();
+            var notices = await _context.Notices
+                .Include(n => n.Owner)
+                .Select(n => n.ToViewModel())
+                .AsNoTracking()
+                .ToListAsync();
             return View(notices);
         }
 
         [HttpGet]
+        [Authorize(Permissions.Notice.Create)]
         public IActionResult Create()
         {
             return View();
@@ -71,13 +79,16 @@ namespace ems.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> CreateAsync(NoticeViewModel noticeVm)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!ModelState.IsValid)
             {
                 return View(noticeVm);
             }
             var notice = noticeVm.ToModel();
+            notice.OwnerId = userId;
             _context.Notices.Add(notice);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", "Home").WithSuccess("", "new notice created");

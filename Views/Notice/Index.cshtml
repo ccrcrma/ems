@@ -11,7 +11,7 @@
         <p class="notice-title">@notice.Title</p>
         <p class="notice-description">@notice.Description</p>
         <span class="badge badge-success">@notice.CreatedDate.Value.ToShortDateString()</span>
-        <span class="badge badge-warning">dummyuser</span>
+        <span class="badge badge-warning">@notice.OwnerName</span>
         <div class="notice-actions">
             <a asp-action="Edit" asp-route-id="@notice.Id" class="btn btn-primary">Edit</a>
             <a href="#delete-modal"

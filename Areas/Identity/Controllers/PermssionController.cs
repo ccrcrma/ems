@@ -13,6 +13,7 @@ using ems.Helpers;
 using ems.Util;
 using ems.Helpers.Alert;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ems.Areas.Identity.Controllers
 {
@@ -33,6 +34,7 @@ namespace ems.Areas.Identity.Controllers
             _logger = logger;
         }
 
+        [Authorize(Permissions.Permission.List)]
         public IActionResult Index()
         {
             var roles = _roleManager.Roles.Select(r => new RoleViewModel
@@ -46,6 +48,7 @@ namespace ems.Areas.Identity.Controllers
 
         [HttpGet]
         [Route("{id}/[Action]")]
+        [Authorize(Permissions.Permission.Edit)]
         public async Task<IActionResult> EditAsync(string id)
         {
             var role = await _roleManager.Roles.FirstOrDefaultAsync(r => r.Name == id);
@@ -68,6 +71,7 @@ namespace ems.Areas.Identity.Controllers
         [HttpPost]
         [Route("{id}/[Action]")]
         [ValidateAntiForgeryToken]
+        [Authorize(Permissions.Permission.Edit)]
         public async Task<IActionResult> EditAsync(string id, PermissionEditModel viewModel)
         {
             if (!ModelState.IsValid) return View(viewModel);
@@ -101,6 +105,12 @@ namespace ems.Areas.Identity.Controllers
 
             var selectedPermissionForPermissions = viewModel.Permission.ReturnSelectedActions();
             ListHelper<Checkbox>.AddRange(allPermissions, selectedPermissionForPermissions);
+
+            if (viewModel.Mail.IsSelected)
+            {
+                allPermissions.Add(viewModel.Mail);
+
+            }
 
             foreach (var permission in allPermissions)
             {

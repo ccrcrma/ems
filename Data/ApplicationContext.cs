@@ -44,6 +44,7 @@ namespace ems.Data
                 leave.Property(l => l.Type).HasColumnType("tinyint");
                 leave.Property(l => l.To).HasColumnType("date");
                 leave.Property(l => l.Description).IsRequired();
+                leave.Property(l => l.OwnerId).IsRequired();
             });
 
             modelBuilder.Entity<Reply>(reply =>
@@ -61,6 +62,13 @@ namespace ems.Data
                 notice.Property(n => n.Title).IsRequired().HasMaxLength(100);
                 notice.Property(n => n.Description).IsRequired();
                 notice.Property(n => n.CreatedDate).HasColumnType("date");
+
+                notice.Property(n => n.OwnerId).IsRequired();
+
+                notice.HasOne<ApplicationUser>(n => n.Owner)
+                    .WithMany()
+                    .HasForeignKey(n => n.OwnerId)
+                    .IsRequired();
             });
 
             modelBuilder.Entity<ApplicationUser>(user =>
@@ -77,6 +85,11 @@ namespace ems.Data
                     .HasForeignKey(u => u.DepartmentId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.Restrict);
+
+                user.HasMany<Leave>(u => u.Leaves)
+                    .WithOne(l => l.Owner)
+                    .IsRequired()
+                    .HasForeignKey(l => l.OwnerId);
             });
 
             modelBuilder.Entity<UserRole>(userRole =>

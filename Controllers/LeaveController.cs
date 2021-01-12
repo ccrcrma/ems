@@ -1,11 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ems.Data;
 using ems.Helpers;
 using ems.Helpers.Alert;
+using ems.Helpers.Permissions;
 using ems.Models;
 using ems.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -28,27 +32,54 @@ namespace ems.Controllers
         public async Task<IActionResult> CreateAsync()
         {
             LeaveCreateIndexViewModel vm = new LeaveCreateIndexViewModel();
-            var allLeaves = await _context.Leaves.Include(l => l.Reply).Select(l => l.ToViewModel()).ToListAsync();
-            vm.MyLeaves = allLeaves;
+            vm.MyLeaves = await GetMyLeaves();
             return View(vm);
+        }
+
+
+        private async Task<List<LeaveViewModel>> GetMyLeaves()
+        {
+            var ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var allLeaves = await _context.Leaves
+                .Include(l => l.Reply)
+                .Where(l => l.OwnerId == ownerId)
+                .Select(l => l.ToViewModel())
+                .ToListAsync();
+            return allLeaves;
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAsync(LeaveViewModel leaveVm)
+        public async Task<IActionResult> CreateAsync([Bind(Prefix = "LeaveViewModel")] LeaveViewModel leaveVm)
         {
+            LeaveCreateIndexViewModel vm = new LeaveCreateIndexViewModel();
+            vm.LeaveViewModel = leaveVm;
+
             if (!ModelState.IsValid)
-                return View(leaveVm);
+            {
+                vm.MyLeaves = await GetMyLeaves();
+                return View(vm);
+
+            }
             var leave = leaveVm.ToModel();
+            leave.OwnerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _context.Leaves.Add(leave);
             await _context.SaveChangesAsync();
-            return LocalRedirect("~/").WithSuccess("hurray", $"new {EnumHelper<LeaveType>.GetDisplayValue(leave.Type)} created");
+            return LocalRedirect("~/")
+                .WithSuccess("hurray", $"new {EnumHelper<LeaveType>.GetDisplayValue(leave.Type)} created");
         }
 
         [HttpGet]
+        [Authorize(Permissions.Leave.List)]
         public async Task<IActionResult> IndexAsync()
         {
-            var leaves = await _context.Leaves.Include(l => l.Reply).Select(leave => leave.ToViewModel()).AsNoTracking().ToListAsync();
+            var leaves = await _context.Leaves
+                .Include(l => l.Owner)
+                .Include(l => l.Reply)
+                .Select(leave => leave.ToViewModel())
+                .AsNoTracking()
+                .ToListAsync();
             return View(leaves);
         }
 

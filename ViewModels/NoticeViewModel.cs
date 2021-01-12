@@ -17,6 +17,10 @@ namespace ems.ViewModels
         [Required(ErrorMessage = "{0} is Required")]
         public string Description { get; set; }
 
+        public string OwnerName { get; set; }
+        
+        
+
         internal Notice ToModel()
         {
             return new Notice

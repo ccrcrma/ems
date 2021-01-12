@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using ems.Areas.Identity.Models;
 using ems.ViewModels;
 
 namespace ems.Models
@@ -24,7 +25,9 @@ namespace ems.Models
         public LeaveType Type { get; set; }
         public string Description { get; set; }
 
+        public string OwnerId { get; set; }
 
+        public ApplicationUser Owner {get;set;}
         internal LeaveViewModel ToViewModel()
         {
             return new LeaveViewModel
@@ -34,7 +37,8 @@ namespace ems.Models
                 To = To,
                 Description = Description,
                 Leave = Type,
-                Reply = Reply
+                Reply = Reply,
+                OwnerName = Owner?.Name
             };
         }
 

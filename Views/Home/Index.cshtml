@@ -33,15 +33,21 @@
         Your Details
     </p>
     <div class="description">
-        <p>Email:test@test.com</p>
-        <p>Address:USA</p>
-        <p>Mobile Number:99999us999</p>
-        <p>Designation:Software Engineer</p>
-        <p>StartDate: 2021/01/10</p>
-        <p>Department:IT Department</p>
+        <p>Email:@Model.IndividualInfo.Email</p>
+        <p>Address:@Model.IndividualInfo.Address</p>
+        <p>Mobile Number:@Model.IndividualInfo.MobileNumber</p>
+        <p>Designation:@Model.IndividualInfo.Designation</p>
+        <p>StartDate: @Model.IndividualInfo.StartDate.ToShortDateString()</p>
+        <p>Department:@Model.IndividualInfo.Department</p>
         <p> 
-            <span class="badge badge-success" 
-                style="display: inline-block; padding:.5rem;">Role:Admin</span></p>
+            @foreach(var role in Model.IndividualInfo.Roles)
+            {
+                
+            <span   class="badge badge-success" 
+                    style="display: inline-block; padding:.5rem;">Role:@role
+            </span>
+            }
+        </p>
 
     </div>
 </div>

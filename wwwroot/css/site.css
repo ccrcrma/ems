@@ -173,3 +173,8 @@ color:#000;
   margin-right: 2rem;
   width:auto;
 }
+
+input.log-out-button{
+  border:none;
+  background:none;
+}

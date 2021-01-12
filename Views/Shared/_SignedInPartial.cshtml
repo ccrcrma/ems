@@ -1,0 +1,29 @@
+@inject SignInManager<ApplicationUser> _signInManager
+@inject UserManager<ApplicationUser> _userManager
+<ul class="nav pull-right m-3">
+    @if(_signInManager.IsSignedIn(User)){
+        <li class="nav-user dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span style="vertical-align:top;">@(_userManager.GetUserName(User))</span>
+                <img src="~/images/user.png" class="nav-avatar" />
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="#">Your Profile</a></li>
+                <li><a href="#">Edit Profile</a></li>
+                <li><a href="#">Account Settings</a></li>
+                <li class="divider"></li>
+                <li>
+                    <form asp-action="LogOut" asp-area="Identity" asp-controller="Account" style="padding: 10px 20px;">
+                        <input type="submit" value="LogOut" class="log-out-button">
+                    </form>
+                </li>
+            </ul>
+        </li>
+    }
+else {
+    <li>
+        <a asp-action="SignIn" asp-controller="Account" asp-area="Identity">SignUp</a>
+    </li>
+}
+</ul>

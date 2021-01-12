@@ -29,7 +29,7 @@ namespace ems.Handlers
             }
             var user = await _userManager.GetUserAsync(context.User);
             var userRoleNames = await _userManager.GetRolesAsync(user);
-            var userRoles = _roleManager.Roles.Where(r => userRoleNames.Contains(r.Name));
+            var userRoles = _roleManager.Roles.Where(r => userRoleNames.Contains(r.Name)).ToList();
             foreach (var role in userRoles)
             {
                 var roleClaims = await _roleManager.GetClaimsAsync(role);

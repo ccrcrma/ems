@@ -11,7 +11,6 @@ using ems.Helpers.Permissions;
 
 namespace ems.Controllers
 {
-    // [Authorize]
     public class DepartmentController : Controller
     {
         private readonly ApplicationContext _context;
@@ -21,7 +20,7 @@ namespace ems.Controllers
             _context = context;
         }
 
-        // [Authorize(Permissions.Department.Create)]
+        [Authorize(Permissions.Department.Create)]
         [HttpGet]
         public IActionResult Create()
         {
@@ -29,7 +28,7 @@ namespace ems.Controllers
         }
 
         [HttpGet]
-        // [Authorize(Permissions.Department.List)]
+        [Authorize(Permissions.Department.List)]
         public async Task<IActionResult> IndexAsync()
         {
             var departments = await _context.Departments.Select(d => new DepartmentViewModel
@@ -43,7 +42,7 @@ namespace ems.Controllers
         }
 
         [HttpGet]
-        // [Authorize(Permissions.Department.Edit)]
+        [Authorize(Permissions.Department.Edit)]
         public async Task<IActionResult> EditAsync(int id)
         {
             var departmentVm = (await _context.Departments
@@ -58,7 +57,7 @@ namespace ems.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // [Authorize(Permissions.Department.Delete)]
+        [Authorize(Permissions.Department.Delete)]
 
         public async Task<IActionResult> DeleteAsync(int id)
         {
@@ -75,7 +74,7 @@ namespace ems.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // [Authorize(Permissions.Department.Edit)]
+        [Authorize(Permissions.Department.Edit)]
 
         public async Task<IActionResult> Edit(int id, DepartmentViewModel departmentVm)
         {
@@ -97,7 +96,7 @@ namespace ems.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // [Authorize(Permissions.Department.Create)]
+        [Authorize(Permissions.Department.Create)]
 
         public async Task<IActionResult> CreateAsync(DepartmentViewModel departmentVm)
         {

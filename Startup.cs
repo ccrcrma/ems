@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,7 +50,11 @@ namespace ems
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors()
             );
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options =>
+                {
+                    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                });
             services.Configure<MailSetting>(Configuration.GetSection("MailSetting"));
             services.AddTransient<IMailService, MailService>();
             services.AddIdentity<ApplicationUser, ApplicationRole>(option =>
@@ -65,12 +70,11 @@ namespace ems
             var serviceProvider = services.BuildServiceProvider();
             Task.Run(() => SampleData.Initialize(serviceProvider));
             services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
-            services.AddAuthorization(options =>
+            services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+            services.ConfigureApplicationCookie(options =>
             {
-                options.AddPolicy(Permissions.Department.View, builder =>
-                {
-                    builder.AddRequirements(new PermissionRequirement(Permissions.Department.View));
-                });
+                options.LoginPath = "/account/signin";
+                options.AccessDeniedPath = "/error/accessdenied";
             });
 
         }
@@ -92,6 +96,7 @@ namespace ems
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
@@ -103,7 +108,7 @@ namespace ems
                 );
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Home}/{id?}");
             });
         }
     }

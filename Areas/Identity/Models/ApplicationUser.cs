@@ -19,13 +19,16 @@ namespace ems.Areas.Identity.Models
         public int DepartmentId { get; set; }
         public DateTime CreatedDate { get; set; }
         public List<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        public List<Leave> Leaves { get; set; } = new List<Leave>();
+
+
         public Department Department { get; set; }
 
         public string Name
         {
             get
             {
-                return LastName + FirstName;
+                return $"{LastName}  {FirstName}";
             }
         }
 

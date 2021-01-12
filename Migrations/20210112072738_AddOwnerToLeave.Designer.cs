@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ems.Data;
 
 namespace ems.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210112072738_AddOwnerToLeave")]
+    partial class AddOwnerToLeave
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -308,18 +310,12 @@ namespace ems.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasColumnType("varchar(95)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("notice");
                 });
@@ -418,24 +414,11 @@ namespace ems.Migrations
 
             modelBuilder.Entity("ems.Models.Leave", b =>
                 {
-                    b.HasOne("ems.Areas.Identity.Models.ApplicationUser", "Owner")
+                    b.HasOne("ems.Areas.Identity.Models.ApplicationUser", null)
                         .WithMany("Leaves")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("ems.Models.Notice", b =>
-                {
-                    b.HasOne("ems.Areas.Identity.Models.ApplicationUser", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("ems.Models.Reply", b =>

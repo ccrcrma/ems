@@ -1,4 +1,5 @@
 using System;
+using ems.Areas.Identity.Models;
 using ems.ViewModels;
 
 namespace ems.Models
@@ -10,6 +11,9 @@ namespace ems.Models
         public string Description { get; set; }
         public DateTime? CreatedDate { get; set; }
 
+        public string OwnerId { get; set; }
+        public ApplicationUser Owner { get; set; }
+
         internal NoticeViewModel ToViewModel()
         {
             return new NoticeViewModel
@@ -17,7 +21,8 @@ namespace ems.Models
                 Id = Id,
                 Title = Title,
                 Description = Description,
-                CreatedDate = CreatedDate
+                CreatedDate = CreatedDate,
+                OwnerName = Owner?.Name
             };
         }
     }

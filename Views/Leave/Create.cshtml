@@ -35,66 +35,70 @@
     <button type="submit" class="btn btn-outline-success">Create</button>
 </form>
 
-<h2 style="margin: 1rem 0; text-align:center">My leaves</h2>
-<table class="table table-bordered table-striped dispaly">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Date From</th>
-            <th>Date To</th>
-            <th>Description</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Description</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-        <tbody>
-            @{
-                int i=1;
-            }
-            @foreach(var myleave in Model.MyLeaves){
-                <tr>
-                    <td>@(i++)</td>
-                    <td>@myleave.From.ToShortDateString()</td>
-                    <td>@myleave.To.ToShortDateString()</td>
-                    <td>@myleave.Description</td>
-                    <td>@(EnumHelper<Leave.LeaveType>.GetDisplayValue(myleave.Leave))</td>
-                    <td>
-                        @{
-                            var status = myleave.Reply?.Status;
-                            string actionColor = "info";
-                            switch(status){
-                                case Reply.ReplyStatus.Approved:
-                                    actionColor = "success";
-                                    break;
+@if(Model.MyLeaves!=null && Model.MyLeaves.Count > 0){
 
-                                case Reply.ReplyStatus.Rejected:
-                                    actionColor="danger";
-                                    break;
+    <h2 style="margin: 1rem 0; text-align:center">My leaves</h2>
+    <table class="table table-bordered table-striped dispaly">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date From</th>
+                <th>Date To</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            <tbody>
+                @{
+                    int i=1;
+                }
+                @foreach(var myleave in Model.MyLeaves){
+                    <tr>
+                        <td>@(i++)</td>
+                        <td>@myleave.From.ToShortDateString()</td>
+                        <td>@myleave.To.ToShortDateString()</td>
+                        <td>@myleave.Description</td>
+                        <td>@(EnumHelper<Leave.LeaveType>.GetDisplayValue(myleave.Leave))</td>
+                        <td>
+                            @{
+                                var status = myleave.Reply?.Status;
+                                string actionColor = "info";
+                                switch(status){
+                                    case Reply.ReplyStatus.Approved:
+                                        actionColor = "success";
+                                        break;
+
+                                    case Reply.ReplyStatus.Rejected:
+                                        actionColor="danger";
+                                        break;
+                                }
+
                             }
+                            <span class="btn btn-@actionColor"> @(myleave.Reply == null ? "Pending":  myleave.Reply.Status.ToString()) </span>
 
-                        }
-                        <span class="btn btn-@actionColor"> @(myleave.Reply == null ? "Pending":  myleave.Reply.Status.ToString()) </span>
+                        </td>
+                        <td>@myleave.Reply?.Description</td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="Leave" asp-route-id="@myleave.Id" class="btn btn-primary">Edit</a >
+                        </td>
+                        <td>
+                            <a  href="#delete-modal" 
+                                data-toggle="modal" 
+                                data-resource-name="Leave"
+                                data-resource-id="@myleave.Id"
+                                data-action="@Url.Action("Delete", "Leave")"
+                                class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </thead>
+    </table>
+}
 
-                    </td>
-                    <td>@myleave.Reply.Description</td>
-                    <td>
-                        <a asp-action="Edit" asp-controller="Leave" asp-route-id="@myleave.Id" class="btn btn-primary">Edit</a >
-                    </td>
-                    <td>
-                        <a  href="#delete-modal" 
-                            data-toggle="modal" 
-                            data-resource-name="Leave"
-                            data-resource-id="@myleave.Id"
-                            data-action="@Url.Action("Delete", "Leave")"
-                            class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </thead>
-</table>
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial"></partial>

@@ -40,7 +40,7 @@ namespace ems.Areas.Identity.ViewModels
         public ResourceAction User { get; set; } = new ResourceAction(nameof(User));
         public ResourceAction Notice { get; set; } = new ResourceAction(nameof(Notice));
         public ResourceAction Leave { get; set; } = new ResourceAction(nameof(Leave));
-        public Checkbox Mail { get; set; }
+        public Checkbox Mail { get; set; } = new Checkbox() { Value = "Permissions.Mail" };
 
 
     }
